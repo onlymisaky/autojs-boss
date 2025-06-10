@@ -1,0 +1,18 @@
+{
+  "name": "autojs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "production": "production",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch --devtool source-map"
+  },
+  "devDependencies": {
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "babel-loader": "^10.0.0",
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "clean-webpack-plugin": "^4.0.0"
+  }
+}
