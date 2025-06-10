@@ -1,9 +1,6 @@
 /**
  * @type {import('@babel/core').TransformOptions}
  */
-
-console.log(123)
-
 const babelConfig = {
   presets: [
     [

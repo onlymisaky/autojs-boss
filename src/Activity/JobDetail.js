@@ -1,4 +1,5 @@
-import { getTextByUiObject, swipeLeft, swipeUp } from '@/common.js';
+import { getTextByUiObject, swipeDown, swipeLeft, swipeToTopWithStop, swipeUp, waitSysAnimationEnd } from '@/common.js';
+import { msg } from '@/config';
 import { isEligibleJob, resolveSalary } from '@/utils.js';
 
 /**
@@ -49,10 +50,8 @@ function getJobInfoInJobDetail() {
   data.jd.keywords = jdKeywords;
   const $$ll_textmodule = selector().id('ll_textmodule');
 
-
-  while (!selector().id('home_tip_vf').exists()) {
+  while (!(selector().id('home_tip_vf').exists())) {
     swipeUp(0.1)
-    sleep(500)
   }
 
   const $$fl_content = selector().id('fl_content');
@@ -76,6 +75,8 @@ function getJobInfoInJobDetail() {
   const $home_tip_vf = selector().id('home_tip_vf').findOne();
   data.distance = getTextByUiObject($home_tip_vf);
 
+  swipeToTopWithStop();
+
   return data;
 }
 
@@ -98,9 +99,8 @@ export function JobDetailAuto() {
 
   const jobInfo = getJobInfoInJobDetail();
 
-  if (!isEligibleJob(JSON.parse(JSON.stringify(jobInfo)))) {
+  if (!isEligibleJob(jobInfo)) {
     swipeLeft(0.8);
-    sleep(1000)
     JobDetailAuto();
     return
   }
@@ -110,7 +110,9 @@ export function JobDetailAuto() {
   // jump to chat
   $btn_chat.click();
 
-  ChatAuto(JSON.parse(JSON.stringify(jobInfo)))
+  waitSysAnimationEnd();
+
+  ChatAuto(jobInfo)
 
   return
 }
@@ -120,8 +122,22 @@ function hasChat() {
   return selector().id('tv_content_text').exists()
 }
 
+function sendMsg(jobInfo) {
+  const $editText_with_scrollbar = selector().id('editText_with_scrollbar').findOne();
+
+  // $editText_with_scrollbar.setText(msg);
+
+  waitSysAnimationEnd();
+  // TODO
+  // selector().bounds(959, 2235, 1036, 2312).clickable().click();
+  console.info('chat')
+  console.log(jobInfo.company.name)
+  console.log(jobInfo.title)
+  console.log(jobInfo.salary.min + '-' + jobInfo.salary.max + ' ' + jobInfo.salary.count)
+  waitSysAnimationEnd();
+}
+
 /**
- * 
  * @param {JobIno} jobInfo? 
  * @returns 
  */
@@ -135,29 +151,16 @@ function ChatAuto(jobInfo = {}) {
     console.log(jobInfo.title)
     console.log(jobInfo.salary.min + '-' + jobInfo.salary.max + ' ' + jobInfo.salary.count)
     back()
-    sleep(1000)
+    waitSysAnimationEnd();
     swipeLeft(0.8)
-    sleep(1000)
     JobDetailAuto();
     return;
   }
 
-  const $editText_with_scrollbar = selector().id('editText_with_scrollbar').findOne();
-
-  $editText_with_scrollbar.setText('您好，我对这份工作非常感兴趣，希望可以有机会与您进一步沟通。我熟练掌握Vue/React，具有微前端、组件库、前端工程化项目经验。期待您的回复。');
-
-  sleep(500);
-  // TODO
-  selector().bounds(959, 2235, 1036, 2312).clickable().click();
-  console.log('chat')
-  console.log(jobInfo.company.name)
-  console.log(jobInfo.title)
-  console.log(jobInfo.salary.min + '-' + jobInfo.salary.max + ' ' + jobInfo.salary.count)
-  sleep(500);
+  sendMsg(jobInfo);
   back()
-  sleep(1000)
+  waitSysAnimationEnd();
   swipeLeft(0.8)
-  sleep(1000)
   JobDetailAuto();
   return
 }

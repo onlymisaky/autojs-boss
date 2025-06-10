@@ -1,3 +1,5 @@
+import { sysAniimationMs } from '@/config';
+
 /**
  * @param {number} range 
  * @returns {[number, number]}
@@ -30,12 +32,24 @@ function formatSwipeDuration(duration) {
   return Math.max(100, Math.min(800, duration))
 }
 
+/**
+ * @param {number} duration 
+ * @returns {number}
+ */
+function formatSwipeSleep(duration, sleepMs) {
+  const n = Number(sleepMs);
+  if (!Number.isNaN(n)) {
+    return duration + 100;
+  }
+
+  return Math.min(duration, sleepMs)
+}
 
 /**
  * @param {number} size 滑动范围
  * @param {number} duration 滑动持续时间
  */
-export function swipeLeft(size = 0.3, duration = 300) {
+export function swipeLeft(size = 0.3, duration = 300, sleepMs = duration) {
   let { width, height } = device;
 
   const [small, big] = formatSwipeSize(size);
@@ -48,9 +62,12 @@ export function swipeLeft(size = 0.3, duration = 300) {
   const endY = startY;
 
   swipe(startX, startY, endX, endY, ms);
+
+  const sleepTime = formatSwipeSleep(ms, sleepMs);
+  sleep(sleepTime);
 }
 
-export function swipeRight(size = 0.3, duration = 300) {
+export function swipeRight(size = 0.3, duration = 300, sleepMs = duration) {
   let { width, height } = device;
 
   const [small, big] = formatSwipeSize(size);
@@ -63,9 +80,12 @@ export function swipeRight(size = 0.3, duration = 300) {
   const endY = startY;
 
   swipe(startX, startY, endX, endY, ms);
+
+  const sleepTime = formatSwipeSleep(ms, sleepMs);
+  sleep(sleepTime);
 }
 
-export function swipeUp(size = 0.3, duration = 300) {
+export function swipeUp(size = 0.3, duration = 300, sleepMs = duration) {
   let { width, height } = device;
 
   const [small, big] = formatSwipeSize(size);
@@ -78,9 +98,12 @@ export function swipeUp(size = 0.3, duration = 300) {
   const endX = startX;
 
   swipe(startX, startY, endX, endY, ms);
+
+  const sleepTime = formatSwipeSleep(ms, sleepMs);
+  sleep(sleepTime);
 }
 
-export function swipeDown(size = 0.3, duration = 300) {
+export function swipeDown(size = 0.3, duration = 300, sleepMs = duration) {
   let { width, height } = device;
 
   const [small, big] = formatSwipeSize(size);
@@ -93,38 +116,48 @@ export function swipeDown(size = 0.3, duration = 300) {
   const endX = startX;
 
   swipe(startX, startY, endX, endY, ms);
+
+  const sleepTime = formatSwipeSleep(ms, sleepMs);
+  sleep(sleepTime);
 }
 
-export function swipeToBottomWithStop(maxSwipes = 15) {
+/**
+ * @param {number} maxSwipes 
+ * @param {'fast'|'slow'|'middle'} speed 
+ * @returns 
+ */
+export function swipeToBottomWithStop(maxSwipes = 15, speed = 'fast') {
   let lastPage = '';
   for (let i = 0; i < maxSwipes; i++) {
     let now = currentActivity() + selector().idMatches('.*').find().map(v => v.text() || v.desc() || '').join('|');
     // 没变化就停
     if (now === lastPage) {
-      console.log(`滑动了${i}次，滑动到最底部`);
       return
     };
     lastPage = now;
-    swipeUp(0.2);
-    sleep(500);
+    const size = { fast: 0.8, slow: 0.2, middle: 0.5 }[speed] || 0.5
+    swipeUp(size);
   }
 
   console.log(`已经滑动了${maxSwipes}次，不确定是否已经滑动到最底部`);
 }
 
-
-export function swipeToTopWithStop(maxSwipes = 15) {
+/**
+ * @param {number} maxSwipes 
+ * @param {'fast'|'slow'|'middle'} speed 
+ * @returns 
+ */
+export function swipeToTopWithStop(maxSwipes = 15, speed = 'fast') {
   let lastPage = '';
   for (let i = 0; i < maxSwipes; i++) {
     let now = currentActivity() + selector().idMatches('.*').find().map(v => v.text() || v.desc() || '').join('|');
     // 没变化就停
     if (now === lastPage) {
-      console.log(`滑动了${i}次，滑动到最顶部`);
-      break
+      return
     };
     lastPage = now;
-    swipeDown();
-    sleep(500);
+    const size = { fast: 0.8, slow: 0.2, middle: 0.5 }[speed] || 0.5
+    swipeDown(size);
   }
 
   console.log(`已经滑动了${maxSwipes}次，不确定是否已经滑动到最顶部`);
@@ -179,3 +212,6 @@ export function findClosestClickableParent($uiobject) {
   return findClosestClickableParent($uiobject.parent());
 }
 
+export function waitSysAnimationEnd() {
+  sleep(sysAniimationMs);
+}

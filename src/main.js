@@ -1,8 +1,9 @@
 import { JobListAuto } from '@/Activity/JobList.js'
 import { isLogout, login } from '@/Activity/Login.js'
+import { waitSysAnimationEnd } from '@/common';
 
 auto();
-console.show();
+console.show(true);
 home();
 sleep(3000)
 launchApp('BOSS直聘');
@@ -17,10 +18,10 @@ threads.start(() => {
   setInterval(() => {
     console.info('登录状态监测中')
     if (isLogout()) {
-      console.info('退出登录')
+      console.error('退出登录')
       bus.emit('logout')
       login()
-      sleep(1000)
+      waitSysAnimationEnd()
       bus.emit('login')
     }
     if (!mainThread.isAlive()) {

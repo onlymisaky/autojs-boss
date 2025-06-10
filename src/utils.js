@@ -8,7 +8,7 @@ export function resolveSalary(salaryText) {
     return {
       min: 0,
       max: 0,
-      count: []
+      count: salaryText
     }
   }
   const salaryRange = arr[0].split('-').map((item) => item.replace('k', ''));
@@ -29,14 +29,14 @@ export function isEligibleJob(job) {
   const { title, salary, company } = job;
 
   if (!(keywords.some((keyword) => title.includes(keyword)))) {
-    console.info('岗位名称不包含关键词');
+    console.error('岗位名称不包含关键词');
     console.log(title)
     return false;
   }
 
   const [min, max] = salaryRange
   if (salary.min < min && salary.max < max) {
-    console.info('薪资范围不符合要求');
+    console.error('薪资范围不符合要求');
     console.log(company.name);
     console.log(title);
     console.log(salary.min + '-' + salary.max + ' ' + salary.count);

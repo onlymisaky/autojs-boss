@@ -7,5 +7,4 @@ export function isLogout() {
 export function login() {
   selector().id('cl_item').findOne().click();
   selector().id('tv_positive').untilFind().get(0).click()
-  sleep(1000);
 }

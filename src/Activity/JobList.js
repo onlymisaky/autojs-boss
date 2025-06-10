@@ -1,5 +1,5 @@
 
-import { getTextByUiObject, findClosestClickableParent, swipeUp } from '@/common.js'
+import { getTextByUiObject, findClosestClickableParent, swipeUp, waitSysAnimationEnd } from '@/common.js'
 import { isEligibleJob, resolveSalary } from '@/utils.js'
 import { JobDetailAuto } from '@/Activity/JobDetail.js'
 
@@ -79,7 +79,6 @@ export function JobListAuto() {
   if (!$job_card_view) {
     console.info('没有找到符合条件的岗位, 滑动屏幕继续查找');
     swipeUp(0.4)
-    sleep(1000)
     JobListAuto()
     return;
   }
@@ -93,6 +92,7 @@ export function JobListAuto() {
 
   // jump to detail
   $clickable_parent.click();
+  waitSysAnimationEnd();
   JobDetailAuto()
   return
 }
