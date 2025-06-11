@@ -1,4 +1,4 @@
-import { keywords, salaryRange } from './config.js'
+import { jobTitleMatches, salaryRange } from './config.js'
 
 export function resolveSalary(salaryText) {
   const arr = salaryText.split('·');
@@ -28,15 +28,23 @@ export function resolveSalary(salaryText) {
 export function isEligibleJob(job) {
   const { title, salary, company } = job;
 
-  if (!(keywords.some((keyword) => title.includes(keyword)))) {
-    console.error('岗位名称不包含关键词');
+  const { include: includeKeywords, exclude: excludeKeywords } = jobTitleMatches
+
+  if (!(includeKeywords.some((keyword) => title.includes(keyword)))) {
+    console.error('不是前端');
+    console.log(title)
+    return false;
+  }
+
+  if (excludeKeywords.some((keyword) => title.includes(keyword))) {
+    console.error('臭外包的');
     console.log(title)
     return false;
   }
 
   const [min, max] = salaryRange
   if (salary.min < min && salary.max < max) {
-    console.error('薪资范围不符合要求');
+    console.error('钱太少');
     console.log(company.name);
     console.log(title);
     console.log(salary.min + '-' + salary.max + ' ' + salary.count);

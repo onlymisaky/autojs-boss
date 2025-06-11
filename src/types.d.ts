@@ -7,6 +7,7 @@ declare global {
       count: number;
     };
     jd: {
+      publicTime?: string;
       workExperience: string;
       degree: string;
       keywords: string[]
