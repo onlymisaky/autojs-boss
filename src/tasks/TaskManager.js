@@ -1,25 +1,48 @@
 import {
   bus,
+  EVENT_APP_EXIT,
   EVENT_LIST_TO_DETAIL,
   EVENT_LOGIN,
   EVENT_LOGOUT,
 } from '@/bus.js';
-import { mainActivity, detailActivity, chatActivity, pkg } from '@/config.js';
+import { waitForActivity2 } from '@/common.js';
+import { detailActivity, mainActivity } from '@/config.js';
+import { GuardTask } from './GuardTask.js';
 import { JobDetailAndChatTask } from './JobDetailAndChatTask.js';
 import { JobListTask } from './JobListTask.js';
 import { LoginTask } from './LoginTask.js';
-import { waitForActivity2 } from '@/common.js';
 
 export class TaskManager {
   constructor() {
-    this.guard()
     this.setupEventListeners();
     this.jobListThread = null;
     this.jobDetailChatThread = null;
+    this.guardThread = threads.start(() => GuardTask.run());
     this.loginThread = threads.start(() => LoginTask.run());
   }
 
   setupEventListeners() {
+    bus.on(EVENT_APP_EXIT, () => {
+      toast('应用退出');
+      if (this.guardThread) {
+        this.guardThread.interrupt();
+        this.guardThread = null;
+      }
+      if (this.loginThread) {
+        this.loginThread.interrupt();
+        this.loginThread = null;
+      }
+      if (this.jobListThread) {
+        this.jobListThread.interrupt();
+        this.jobListThread = null;
+      }
+      if (this.jobDetailChatThread) {
+        this.jobDetailChatThread.interrupt();
+        this.jobDetailChatThread = null;
+      }
+      exit();
+    });
+
     bus.on(EVENT_LOGOUT, () => {
       console.log('退出登录');
       if (this.jobDetailChatThread) {
@@ -46,8 +69,6 @@ export class TaskManager {
       waitForActivity2(detailActivity);
       this.startJobDetailAndChatTask();
     });
-
-
   }
 
   startJobListTask() {
@@ -66,15 +87,5 @@ export class TaskManager {
     }
 
     this.jobDetailChatThread = threads.start(() => JobDetailAndChatTask.run());
-  }
-
-  guard() {
-    while (true) {
-      sleep(1000);
-      if (currentPackage() !== pkg) {
-        toast('任务结束');
-        exit();
-      }
-    }
   }
 }

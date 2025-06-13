@@ -1,5 +1,7 @@
 export const bus = events.emitter();
 
+export const EVENT_APP_EXIT = 'app-exit';
+
 export const EVENT_LOGOUT = 'logout';
 
 export const EVENT_LOGIN = 'login';

@@ -26,6 +26,9 @@ export default antfu({
       device: 'readonly',
       events: 'readonly',
       getClip: 'readonly',
+      setClip: 'readonly',
+      exit: 'readonly',
+      toast: 'readonly',
     },
   },
   env: {

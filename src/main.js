@@ -1,14 +1,13 @@
-import { TaskManager } from '@/tasks/TaskManager.js';
 import { pkg } from '@/config.js';
+import { TaskManager } from '@/tasks/TaskManager.js';
 
 auto.waitFor();
-console.show(true);
+console.show();
 home();
 app.launchApp('BOSS直聘');
 
 function main() {
-
-  while (currentPackage() !== pkg) {
+  while (currentPackage().trim() !== pkg) {
     sleep(1000);
   }
 

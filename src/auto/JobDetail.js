@@ -1,4 +1,11 @@
-import { findClosestClickableParent, getTextByUiObject, swipeLeft, swipeToTopWithStop, swipeUp, waitForLeaveActivity } from '@/common.js';
+import {
+  findClosestClickableParent,
+  getTextByUiObject,
+  swipeLeft,
+  swipeToTopWithStop,
+  swipeUp,
+  waitForLeaveActivity,
+} from '@/common.js';
 import { detailActivity } from '@/config';
 import { consoleJobInfo, isEligibleJob, resolveSalary } from '@/utils.js';
 
@@ -7,6 +14,7 @@ export function nextJob(beforSwipeWaitMs = 1) {
   swipeLeft(0.8);
 }
 
+// eslint-disable-next-line no-unused-vars, unused-imports/no-unused-vars
 function copyUrl() {
   const $$iv_share = selector().id('iv_share');
   $$iv_share.findOne().click();
@@ -33,7 +41,7 @@ function copyUrl() {
 
   if (!$clickable_parent) {
     setClip('');
-    return
+    return;
   }
 
   $clickable_parent.click();
@@ -121,9 +129,9 @@ function getJobInfoInJobDetail() {
   const $fl_content_above_collection = findInCollectionById(getCurrentPanel().children(), 'fl_content_above');
   const jd_keywords = $fl_content_above_collection.size() > 0
     ? $fl_content_above_collection
-      .get(0)
-      .find(selector().className('android.widget.Button'))
-      .map((item) => getTextByUiObject(item))
+        .get(0)
+        .find(selector().className('android.widget.Button'))
+        .map((item) => getTextByUiObject(item))
     : [];
 
   let jd_description = '';
@@ -140,9 +148,9 @@ function getJobInfoInJobDetail() {
   const $fl_content_collection = findInCollectionById(getCurrentPanel().children(), 'fl_content');
   const company_benefits = $fl_content_collection.size() > 0
     ? $fl_content_collection
-      .get(0)
-      .find(selector().className('android.widget.Button'))
-      .map((item) => getTextByUiObject(item))
+        .get(0)
+        .find(selector().className('android.widget.Button'))
+        .map((item) => getTextByUiObject(item))
     : [];
 
   const company_name = getText(getCurrentPanel().children(), 'tv_com_name');
