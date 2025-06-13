@@ -82,11 +82,13 @@ export const excludeCompanies = [
   '佰钧成',
   '达达集团',
   '人瑞',
+  '海南钦诚软件',
+  '自协软件',
 ];
 
 export const excludeCompanyMsg = '公司不适合';
 
-export const salaryRange = [25, 30];
+export const salaryRange = [20, 30];
 
 export const salaryNotInRangeMsg = '薪资不在范围内';
 

@@ -1,21 +1,14 @@
 import {
   bus,
-  EVENT_CHAT_BACK_TO_DETAIL,
-  EVENT_DETAIL_TO_CHAT,
-  EVENT_DETAIL_TO_NEXT_DETAIL,
   EVENT_LIST_TO_DETAIL,
   EVENT_LOGIN,
   EVENT_LOGOUT,
 } from '@/bus.js';
-import { chatActivity, detailActivity } from '@/config.js';
+import { mainActivity, detailActivity, chatActivity } from '@/config.js';
 import { JobDetailAndChatTask } from './JobDetailAndChatTask.js';
 import { JobListTask } from './JobListTask.js';
 import { LoginTask } from './LoginTask.js';
-
-/**
- * 界面跳转时，只判断是否已经离开当前界面 (waitForLeaveActivity) ，然后发送一个对应的事件 bus.emit(EVENT_XXX)
- * 任务管理器负责监听这些事件，判断是否进入目标界面 (waitForActivity) ，然后启动对应的任务
- */
+import { waitForActivity2 } from '@/common.js';
 
 export class TaskManager {
   constructor() {
@@ -36,32 +29,24 @@ export class TaskManager {
         this.jobListThread.interrupt();
         this.jobListThread = null;
       }
-      sleep(1000);
     });
 
     bus.on(EVENT_LOGIN, () => {
+      waitForActivity2(mainActivity);
       this.startJobListTask();
     });
 
     // 监听列表到详情的事件
     bus.on(EVENT_LIST_TO_DETAIL, () => {
-      waitForActivity(detailActivity);
+      if (this.jobListThread) {
+        this.jobListThread.interrupt();
+        this.jobListThread = null;
+      }
+      waitForActivity2(detailActivity);
       this.startJobDetailAndChatTask();
     });
 
-    // 监听详情到聊天的事件
-    bus.on(EVENT_DETAIL_TO_CHAT, () => {
-      waitForActivity(chatActivity);
-    });
 
-    // 监听聊天到详情的事件
-    bus.on(EVENT_CHAT_BACK_TO_DETAIL, () => {
-      waitForActivity(detailActivity);
-    });
-
-    // 监听详情到下一个详情的事件
-    bus.on(EVENT_DETAIL_TO_NEXT_DETAIL, () => {
-    });
   }
 
   startJobListTask() {
