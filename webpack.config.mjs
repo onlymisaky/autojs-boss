@@ -1,8 +1,8 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * @type {import('webpack').Configuration}
@@ -17,7 +17,7 @@ const webpackConfig = {
     extensions: ['.js', '.mjs', '.json'],
     alias: {
       '@': path.resolve(__dirname, './src'),
-    }
+    },
   },
   module: {
     rules: [
@@ -32,7 +32,7 @@ const webpackConfig = {
         },
       },
     ],
-  }
-}
+  },
+};
 
-export default webpackConfig
+export default webpackConfig;

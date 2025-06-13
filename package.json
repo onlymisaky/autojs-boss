@@ -1,18 +1,21 @@
 {
   "name": "autojs",
-  "version": "1.0.0",
   "type": "module",
+  "version": "1.0.0",
   "scripts": {
     "production": "production",
     "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch --devtool source-map"
+    "watch": "webpack --mode development --watch --devtool source-map",
+    "eslint": "eslint .",
+    "eslint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1",
-    "babel-loader": "^10.0.0",
+    "@antfu/eslint-config": "^4.14.1",
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
-    "clean-webpack-plugin": "^4.0.0"
+    "babel-loader": "^10.0.0",
+    "eslint": "^9.28.0",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }

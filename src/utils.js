@@ -1,71 +1,83 @@
-import { jobTitleMatches, salaryRange } from './config.js'
+import {
+  jobTitleMatches,
+  jobTitleNotIncludeMsg,
+  jobTitleExcludeMsg,
+  salaryRange,
+  salaryNotInRangeMsg,
+  excludeCompanies,
+  excludeCompanyMsg
+} from './config.js';
 
 export function resolveSalary(salaryText) {
-  const arr = salaryText.split('·')
-  const count = arr[1] || '12薪'
-  arr[0] = `${arr[0]}`.trim().toLowerCase()
+  const arr = salaryText.split('·');
+  const count = arr[1] || '12薪';
+  arr[0] = `${arr[0]}`.trim().toLowerCase();
   if (!arr[0].endsWith('k')) {
     return {
       min: 0,
       max: 0,
-      count: salaryText
-    }
+      count: salaryText,
+    };
   }
-  const salaryRange = arr[0].split('-').map((item) => item.replace('k', ''))
-  const max = salaryRange[1]
-  const min = salaryRange[0]
+  const salaryRange = arr[0].split('-').map((item) => item.replace('k', ''));
+  const max = salaryRange[1];
+  const min = salaryRange[0];
   return {
     min,
     max,
     count,
-  }
+  };
 }
 
 /**
- * @param {string} prefix 
- * @param {JobIno} jobInfo 
+ * @param {string} reason
+ * @param {JobIno} jobInfo
  */
-function consoleError(prefix, jobInfo) {
-  console.error(prefix + ' ↓↓↓')
-  console.log(jobInfo.company.name)
-  console.log(jobInfo.title)
-  console.log(jobInfo.salary.min + '-' + jobInfo.salary.max + ' ' + jobInfo.salary.count)
-  console.error('------------')
+export function consoleNotMatchReason(reason, jobInfo) {
+  console.error(`PASS: ${reason} ↓↓↓`);
+  console.log(jobInfo.company.name);
+  console.log(jobInfo.title);
+  console.log(`${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}`);
+  console.error('------------');
 }
 
 /**
- * @param {JobIno} job 
- * @returns {boolean}
+ * @param {JobIno} job
  */
 export function isEligibleJob(job) {
-  const { title, salary, company } = job
+  const { title = '', salary = { min: 0, max: 0, count: '' }, company = {} } = job;
 
-  const { include: includeKeywords, exclude: excludeKeywords } = jobTitleMatches
+  const includeKeywords = jobTitleMatches.include.filter((keyword) => keyword.trim());
+  const excludeKeywords = jobTitleMatches.exclude.filter((keyword) => keyword.trim());
+  const excludeCompany = excludeCompanies.filter((keyword) => keyword.trim());
 
-  if (!(includeKeywords.some((keyword) => title.includes(keyword)))) {
-    consoleError('不是前端', job)
-    return false
+  if (includeKeywords.length) {
+    if (!(includeKeywords.some((keyword) => title.includes(keyword)))) {
+      return { isEligible: false, reason: jobTitleNotIncludeMsg };
+    }
   }
 
   if (excludeKeywords.some((keyword) => title.includes(keyword))) {
-    consoleError('臭外包的', job)
-    return false
+    return { isEligible: false, reason: jobTitleExcludeMsg };
   }
 
-  const [min, max] = salaryRange
+  const [min, max] = salaryRange;
   if (salary.min < min && salary.max < max) {
-    consoleError('钱太少', job)
-    return false
+    return { isEligible: false, reason: salaryNotInRangeMsg };
   }
 
-  return true
-}
+  if (excludeCompany.some((keyword) => company.name.includes(keyword))) {
+    return { isEligible: false, reason: excludeCompanyMsg };
+  }
 
+  return { isEligible: true, reason: '' };
+}
 
 export function catchError(fn, errorFn) {
   try {
-    fn()
-  } catch (error) {
-    errorFn(error)
+    fn();
+  }
+  catch (error) {
+    errorFn(error);
   }
 }

@@ -8,11 +8,11 @@ const babelConfig = {
       {
         modules: false,
         targets: {
-          node: '16'
-        }
-      }
-    ]
-  ]
-}
+          node: '16',
+        },
+      },
+    ],
+  ],
+};
 
 export default babelConfig;

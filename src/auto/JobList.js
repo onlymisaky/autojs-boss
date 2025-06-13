@@ -1,37 +1,37 @@
-import { getTextByUiObject, findClosestClickableParent, swipeUp, waitForLeaveActivity, } from '@/common.js'
-import { isEligibleJob, resolveSalary } from '@/utils.js'
-import { mainActivity } from '@/config'
+import { findClosestClickableParent, getTextByUiObject, swipeUp, waitForLeaveActivity } from '@/common.js';
+import { mainActivity } from '@/config';
+import { isEligibleJob, resolveSalary } from '@/utils.js';
 
 /**
- * @param {UiObject} $boss_job_card_view 
- * @returns {Partial<JobIno>}
+ * @param {UiObject} $boss_job_card_view
+ * @returns {Partial<JobIno>} jobInfo
  */
 function getJobInfoBy$boss_job_card_view($boss_job_card_view) {
-  const $tv_position_name = $boss_job_card_view.findOne(selector().id('tv_position_name'))
-  const $tv_salary_statue = $boss_job_card_view.findOne(selector().id('tv_salary_statue'))
+  const $tv_position_name = $boss_job_card_view.findOne(selector().id('tv_position_name'));
+  const $tv_salary_statue = $boss_job_card_view.findOne(selector().id('tv_salary_statue'));
 
-  const $tv_company_name = $boss_job_card_view.findOne(selector().id('tv_company_name'))
-  const $tv_stage = $boss_job_card_view.findOne(selector().id('tv_stage'))
-  const $tv_scale = $boss_job_card_view.findOne(selector().id('tv_scale'))
-  const $tv_rcd_reason = $boss_job_card_view.findOne(selector().id('tv_rcd_reason'))
+  const $tv_company_name = $boss_job_card_view.findOne(selector().id('tv_company_name'));
+  const $tv_stage = $boss_job_card_view.findOne(selector().id('tv_stage'));
+  const $tv_scale = $boss_job_card_view.findOne(selector().id('tv_scale'));
+  const $tv_rcd_reason = $boss_job_card_view.findOne(selector().id('tv_rcd_reason'));
 
-  const $fl_require_info = $boss_job_card_view.findOne(selector().id('fl_require_info'))
+  const $fl_require_info = $boss_job_card_view.findOne(selector().id('fl_require_info'));
 
-  const $iv_online_point = $boss_job_card_view.findOne(selector().id('iv_online_point'))
-  const $tv_employer = $boss_job_card_view.findOne(selector().id('tv_employer'))
-  const $tv_active_status = $boss_job_card_view.findOne(selector().id('tv_active_status'))
+  const $iv_online_point = $boss_job_card_view.findOne(selector().id('iv_online_point'));
+  const $tv_employer = $boss_job_card_view.findOne(selector().id('tv_employer'));
+  const $tv_active_status = $boss_job_card_view.findOne(selector().id('tv_active_status'));
 
-  const $tv_distance = $boss_job_card_view.findOne(selector().id('tv_distance'))
+  const $tv_distance = $boss_job_card_view.findOne(selector().id('tv_distance'));
 
-  const $fl_require_info_children = $fl_require_info.find(selector().className('android.widget.TextView'))
-  const keywords = $fl_require_info_children.map((child) => getTextByUiObject(child))
-  const [workExperience = '', degree = '', ...otherKeywords] = keywords
+  const $fl_require_info_children = $fl_require_info.find(selector().className('android.widget.TextView'));
+  const keywords = $fl_require_info_children.map((child) => getTextByUiObject(child));
+  const [workExperience = '', degree = '', ...otherKeywords] = keywords;
 
-  const tv_employer_text = getTextByUiObject($tv_employer)
-  const [bossName = '', bossTitle = ''] = tv_employer_text.split('·')
+  const tv_employer_text = getTextByUiObject($tv_employer);
+  const [bossName = '', bossTitle = ''] = tv_employer_text.split('·');
 
-  const tv_distance_text = getTextByUiObject($tv_distance)
-  const [distance = '', address = ''] = tv_distance_text.split('km')
+  const tv_distance_text = getTextByUiObject($tv_distance);
+  const [distance = '', address = ''] = tv_distance_text.split('km');
 
   /** @type {JobIno} */
   const data = {
@@ -55,44 +55,47 @@ function getJobInfoBy$boss_job_card_view($boss_job_card_view) {
       active: getTextByUiObject($tv_active_status),
       online: $iv_online_point,
     },
-    distance: distance.trim()
-  }
+    distance: distance.trim(),
+  };
 
-  return data
+  return data;
 }
 
 /**
  * 查找当前列表中是否有符合要求的职位，如果没有，向上滑动
  * 返回 true 表示有符合要求的职位
  * 返回 false 表示没有
- * @returns 
  */
 export function JobListAuto() {
-  const $boss_job_card_view_list = selector().id('boss_job_card_view').untilFind()
-  let $job_card_view = null
+  const $boss_job_card_view_list = selector().id('boss_job_card_view').untilFind();
+  let $job_card_view = null;
 
   $boss_job_card_view_list.forEach(element => {
-    const jobInfo = getJobInfoBy$boss_job_card_view(element)
-    const isEligible = isEligibleJob(jobInfo)
-    if (isEligible && !$job_card_view) {
-      $job_card_view = element
+    try {
+      const jobInfo = getJobInfoBy$boss_job_card_view(element);
+      const { isEligible } = isEligibleJob(jobInfo);
+      if (isEligible && !$job_card_view) {
+        $job_card_view = element;
+      }
+    } catch (error) {
+      console.error('应该是没完全滚动到可视区域内', error);
     }
-  })
+  });
 
   if (!$job_card_view) {
-    swipeUp(0.4)
-    return
+    swipeUp(0.4);
+    return;
   }
 
-  const $clickable_parent = findClosestClickableParent($job_card_view)
+  const $clickable_parent = findClosestClickableParent($job_card_view);
 
   if (!$clickable_parent) {
-    return
+    return;
   }
 
-  $clickable_parent.click()
+  $clickable_parent.click();
 
-  waitForLeaveActivity(mainActivity)
+  waitForLeaveActivity(mainActivity);
 
-  return true
+  return true;
 }
