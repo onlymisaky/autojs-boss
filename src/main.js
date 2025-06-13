@@ -1,5 +1,5 @@
 import { TaskManager } from '@/tasks/TaskManager.js';
-import { pkg } from './config';
+import { pkg } from '@/config.js';
 
 auto.waitFor();
 console.show(true);
