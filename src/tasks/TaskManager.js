@@ -7,6 +7,7 @@ import {
 } from '@/bus.js';
 import { waitForActivity2 } from '@/common.js';
 import { detailActivity, mainActivity } from '@/config.js';
+import { logWithTime } from '@/utils.js';
 import { GuardTask } from './GuardTask.js';
 import { JobDetailAndChatTask } from './JobDetailAndChatTask.js';
 import { JobListTask } from './JobListTask.js';
@@ -44,7 +45,7 @@ export class TaskManager {
     });
 
     bus.on(EVENT_LOGOUT, () => {
-      console.log('退出登录');
+      logWithTime('退出登录');
       if (this.jobDetailChatThread) {
         this.jobDetailChatThread.interrupt();
         this.jobDetailChatThread = null;

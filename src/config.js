@@ -13,16 +13,26 @@ export const jobTitleMatches = {
     '外派',
     '驻场',
     '短期',
+    '长期',
+    '稳定',
+
     '英语',
     '口语',
+
     '产品经理',
     '经理',
+
     '游戏',
+    'unity',
     'cocos',
+    'webgl',
+    'gis',
+
     '微信',
     '小程序',
     'uniapp',
     'uni-app',
+
     '移动端',
     'android',
     '安卓',
@@ -32,18 +42,25 @@ export const jobTitleMatches = {
     'rn',
     'native',
     '鸿蒙',
+    '跨端',
+
     '全栈',
     'java',
+
     'ai',
     'agent',
     'agi',
     '算法',
+
     '合伙人',
     '区块链',
     '远程',
+
     '校招',
     '兼职',
     '实习',
+
+    '设计师',
   ],
 };
 
@@ -85,6 +102,7 @@ export const excludeCompanies = [
   '人瑞',
   '海南钦诚软件',
   '自协软件',
+  '新致软件',
 ];
 
 export const excludeCompanyMsg = '公司不适合';

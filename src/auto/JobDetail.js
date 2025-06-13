@@ -7,7 +7,7 @@ import {
   waitForLeaveActivity,
 } from '@/common.js';
 import { detailActivity } from '@/config';
-import { consoleJobInfo, isEligibleJob, resolveSalary } from '@/utils.js';
+import { consoleJobInfo, isEligibleJob, logErrorWithTime, resolveSalary, timeNow } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
   sleep(beforSwipeWaitMs);
@@ -85,7 +85,7 @@ function getText(uicollection, selectorId) {
  * @param {JobIno} jobInfo
  */
 function consoleNotMatchReason(reason, jobInfo) {
-  console.error(`PASS: ${reason} ↓↓↓`);
+  logErrorWithTime(`PASS: ${reason} ↓↓↓`);
   consoleJobInfo(jobInfo);
   console.error('------------');
 }

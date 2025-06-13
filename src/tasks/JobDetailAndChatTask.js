@@ -2,6 +2,7 @@ import { ChatAuto } from '@/auto/Chat.js';
 import { JobDetailAuto, nextJob } from '@/auto/JobDetail.js';
 import { waitForActivity2 } from '@/common';
 import { chatActivity, detailActivity } from '@/config.js';
+import { logErrorWithTime } from '@/utils';
 
 export const JobDetailAndChatTask = {
   /** @type {'detail' | 'chat'} */
@@ -34,7 +35,7 @@ export const JobDetailAndChatTask = {
         }
       }
       catch (e) {
-        console.error('JobDetailAndChatTask', e);
+        logErrorWithTime('JobDetailAndChatTask', e);
         break;
       }
     }

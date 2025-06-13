@@ -1,13 +1,13 @@
 import { waitForLeaveActivity } from '@/common.js';
 import { chatActivity, msg } from '@/config.js';
-import { consoleJobInfo } from '@/utils';
+import { consoleJobInfo, timeNow } from '@/utils';
 
 function hasChat() {
   return selector().id('tv_content_text').exists();
 }
 
 function consoleChatInfo(prefix, jobInfo) {
-  console.info(`${prefix} ↓↓↓`);
+  console.info(`[${timeNow()}] `, `${prefix} ↓↓↓`);
   consoleJobInfo(jobInfo);
   console.info('------------');
 }

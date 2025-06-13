@@ -1,5 +1,6 @@
 import { JobListAuto } from '@/auto/JobList.js';
 import { bus, EVENT_LIST_TO_DETAIL } from '@/bus';
+import { logErrorWithTime } from '@/utils';
 
 /**
  * 发送事件可以放在 auto 函数中，也可以放在任务中
@@ -17,7 +18,7 @@ export const JobListTask = {
         }
       }
       catch (e) {
-        console.error('JobListTask', e);
+        logErrorWithTime('JobListTask', e);
         break;
       }
     }

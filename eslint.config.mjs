@@ -22,6 +22,7 @@ export default antfu({
       selector: 'readonly',
       sleep: 'readonly',
       waitForActivity: 'readonly',
+      waitForPackage: 'readonly',
       swipe: 'readonly',
       device: 'readonly',
       events: 'readonly',
