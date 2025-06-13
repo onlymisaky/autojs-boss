@@ -18,6 +18,7 @@ export const jobTitleMatches = {
     '产品经理',
     '经理',
     '游戏',
+    'cocos',
     '微信',
     '小程序',
     'uniapp',

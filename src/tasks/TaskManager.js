@@ -4,7 +4,7 @@ import {
   EVENT_LOGIN,
   EVENT_LOGOUT,
 } from '@/bus.js';
-import { mainActivity, detailActivity, chatActivity } from '@/config.js';
+import { mainActivity, detailActivity, chatActivity, pkg } from '@/config.js';
 import { JobDetailAndChatTask } from './JobDetailAndChatTask.js';
 import { JobListTask } from './JobListTask.js';
 import { LoginTask } from './LoginTask.js';
@@ -12,6 +12,7 @@ import { waitForActivity2 } from '@/common.js';
 
 export class TaskManager {
   constructor() {
+    this.guard()
     this.setupEventListeners();
     this.jobListThread = null;
     this.jobDetailChatThread = null;
@@ -65,5 +66,15 @@ export class TaskManager {
     }
 
     this.jobDetailChatThread = threads.start(() => JobDetailAndChatTask.run());
+  }
+
+  guard() {
+    while (true) {
+      sleep(1000);
+      if (currentPackage() !== pkg) {
+        toast('任务结束');
+        exit();
+      }
+    }
   }
 }
