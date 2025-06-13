@@ -77,8 +77,9 @@ export function JobListAuto() {
       if (isEligible && !$job_card_view) {
         $job_card_view = element;
       }
-    } catch (error) {
-      console.error('应该是没完全滚动到可视区域内', error);
+    }
+    catch {
+      console.error('应该是没完全滚动到可视区域内');
     }
   });
 
@@ -90,6 +91,7 @@ export function JobListAuto() {
   const $clickable_parent = findClosestClickableParent($job_card_view);
 
   if (!$clickable_parent) {
+    swipeUp(0.4);
     return;
   }
 

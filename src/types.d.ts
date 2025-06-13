@@ -7,6 +7,7 @@ declare global {
       count: number
     }
     jd: {
+      description?: string
       publicTime?: string
       workExperience: string
       degree: string

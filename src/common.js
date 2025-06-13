@@ -223,8 +223,8 @@ export function waitForLeaveActivity(activityName, period = 200) {
     }
     return true;
   }
-  catch (error) {
-    console.error(`等待离开 ${activityName} 时发生错误:`, error);
+  catch {
+    console.error(`等待离开 ${activityName} 时发生错误:`);
     return false;
   }
 }

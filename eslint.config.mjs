@@ -25,6 +25,7 @@ export default antfu({
       swipe: 'readonly',
       device: 'readonly',
       events: 'readonly',
+      getClip: 'readonly',
     },
   },
   env: {

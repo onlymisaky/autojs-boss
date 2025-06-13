@@ -31,6 +31,7 @@ export const jobTitleMatches = {
     'rn',
     'native',
     '鸿蒙',
+    '全栈',
     'java',
     'ai',
     'agent',
@@ -38,6 +39,10 @@ export const jobTitleMatches = {
     '算法',
     '合伙人',
     '区块链',
+    '远程',
+    '校招',
+    '兼职',
+    '实习',
   ],
 };
 
@@ -62,6 +67,7 @@ export const excludeCompanies = [
   'PDD',
   '百度',
   '得物',
+  '华为',
   '微创',
   '合合信息',
   '泛微',
@@ -71,6 +77,11 @@ export const excludeCompanies = [
   '数字马力',
   '中软',
   '中软国际',
+  '软通动力',
+  '法本',
+  '佰钧成',
+  '达达集团',
+  '人瑞',
 ];
 
 export const excludeCompanyMsg = '公司不适合';
@@ -80,4 +91,3 @@ export const salaryRange = [25, 30];
 export const salaryNotInRangeMsg = '薪资不在范围内';
 
 export const msg = '您好，我对这份工作非常感兴趣，希望可以有机会与您进一步沟通。我熟练掌握Vue/React，具有微前端、组件库、前端工程化项目经验。期待您的回复。';
-

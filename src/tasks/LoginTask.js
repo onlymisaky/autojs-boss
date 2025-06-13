@@ -12,8 +12,8 @@ export const LoginTask = {
         waitForActivity(mainActivity);
         bus.emit(EVENT_LOGIN);
       }
-      catch (error) {
-        console.error(error);
+      catch {
+        console.error('LoginTask');
         break;
       }
     }

@@ -1,11 +1,11 @@
 import {
+  excludeCompanies,
+  excludeCompanyMsg,
+  jobTitleExcludeMsg,
   jobTitleMatches,
   jobTitleNotIncludeMsg,
-  jobTitleExcludeMsg,
-  salaryRange,
   salaryNotInRangeMsg,
-  excludeCompanies,
-  excludeCompanyMsg
+  salaryRange,
 } from './config.js';
 
 export function resolveSalary(salaryText) {
@@ -30,15 +30,12 @@ export function resolveSalary(salaryText) {
 }
 
 /**
- * @param {string} reason
  * @param {JobIno} jobInfo
  */
-export function consoleNotMatchReason(reason, jobInfo) {
-  console.error(`PASS: ${reason} ↓↓↓`);
-  console.log(jobInfo.company.name);
-  console.log(jobInfo.title);
-  console.log(`${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}`);
-  console.error('------------');
+export function consoleJobInfo(jobInfo) {
+  console.log(`公司：${jobInfo.company.name}`);
+  console.log(`职位：${jobInfo.title}`);
+  console.log(`薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}`);
 }
 
 /**
@@ -71,13 +68,4 @@ export function isEligibleJob(job) {
   }
 
   return { isEligible: true, reason: '' };
-}
-
-export function catchError(fn, errorFn) {
-  try {
-    fn();
-  }
-  catch (error) {
-    errorFn(error);
-  }
 }

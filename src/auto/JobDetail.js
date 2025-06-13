@@ -1,10 +1,42 @@
-import { getTextByUiObject, swipeLeft, swipeToTopWithStop, swipeUp, waitForLeaveActivity } from '@/common.js';
+import { findClosestClickableParent, getTextByUiObject, swipeLeft, swipeToTopWithStop, swipeUp, waitForLeaveActivity } from '@/common.js';
 import { detailActivity } from '@/config';
-import { consoleNotMatchReason, isEligibleJob, resolveSalary } from '@/utils.js';
+import { consoleJobInfo, isEligibleJob, resolveSalary } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
   sleep(beforSwipeWaitMs);
   swipeLeft(0.8);
+}
+
+function copyUrl() {
+  const $$iv_share = selector().id('iv_share');
+  $$iv_share.findOne().click();
+
+  const $$tv_share_title = selector().id('tv_share_title');
+  $$tv_share_title.waitFor();
+
+  const $rv_share = selector().id('rv_share').findOne();
+  const { top, bottom, right, left } = $rv_share.bounds();
+
+  const startX = (right - left) * 0.9;
+  const endX = (right - left) * 0.1;
+
+  const startY = top + (bottom - top) * 0.5;
+  const endY = startY;
+
+  while (!selector().id('tv_share_type').text('复制链接').exists()) {
+    swipe(startX, startY, endX, endY, 300);
+    sleep(100);
+  }
+
+  const $tv_share_type = selector().id('tv_share_type').text('复制链接').findOne();
+  const $clickable_parent = findClosestClickableParent($tv_share_type);
+
+  if (!$clickable_parent) {
+    setClip('');
+    return
+  }
+
+  $clickable_parent.click();
 }
 
 function getCurrentPanel() {
@@ -40,6 +72,16 @@ function getText(uicollection, selectorId) {
   return text;
 }
 
+/**
+ * @param {string} reason
+ * @param {JobIno} jobInfo
+ */
+function consoleNotMatchReason(reason, jobInfo) {
+  console.error(`PASS: ${reason} ↓↓↓`);
+  consoleJobInfo(jobInfo);
+  console.error('------------');
+}
+
 function getJobInfoInJobDetail() {
   // 获取的集合不是实时的，所以每次重新调用
   const title = getText(getCurrentPanel().children(), 'tv_job_name').trim().toLowerCase();
@@ -61,7 +103,7 @@ function getJobInfoInJobDetail() {
 
   const boss_name = getText(getCurrentPanel().children(), 'tv_boss_name');
   const bossTitleText = getText(getCurrentPanel().children(), 'tv_boss_title');
-  const boss_title = bossTitleText.split('·')[1] || '';
+  const [company_title, boss_title] = bossTitleText.split('•');
   const $boss_label_tv_collection = findInCollectionById(getCurrentPanel().children(), 'boss_label_tv');
   const boss_active = $boss_label_tv_collection.size() > 0 ? getTextByUiObject($boss_label_tv_collection.get(0)) : '';
 
@@ -69,11 +111,11 @@ function getJobInfoInJobDetail() {
   const { isEligible } = isEligibleJob({
     title,
     salary,
-    company: { name: `${bossTitleText.split('·')[0]}`.trim() }
-  })
+    company: { name: company_title.trim() },
+  });
 
   if (!isEligible) {
-    return { title, salary, company: { name: `${bossTitleText.split('·')[0]}`.trim() } };
+    return { title, salary, company: { name: company_title.trim() } };
   }
 
   const $fl_content_above_collection = findInCollectionById(getCurrentPanel().children(), 'fl_content_above');
@@ -83,6 +125,13 @@ function getJobInfoInJobDetail() {
       .find(selector().className('android.widget.Button'))
       .map((item) => getTextByUiObject(item))
     : [];
+
+  let jd_description = '';
+  const $ll_textmodule = getCurrentPanel().children().find(selector().id('ll_textmodule'));
+  if ($ll_textmodule.size()) {
+    const $tv_description = $ll_textmodule.get(0).findOne(selector().id('tv_description'));
+    jd_description = getTextByUiObject($tv_description);
+  }
 
   while (!(selector().id('home_tip_vf').exists())) {
     swipeUp(0.2);
@@ -113,6 +162,7 @@ function getJobInfoInJobDetail() {
     title,
     salary,
     jd: {
+      description: jd_description,
       workExperience: jd_workExperience,
       degree: jd_degree,
       publicTime: jd_publicTime,

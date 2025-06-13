@@ -16,8 +16,8 @@ export const JobListTask = {
           break;
         }
       }
-      catch (error) {
-        console.error(error);
+      catch {
+        console.error('JobListTask');
         break;
       }
     }

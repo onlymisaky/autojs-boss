@@ -1,5 +1,6 @@
 import { waitForLeaveActivity } from '@/common.js';
 import { chatActivity, msg } from '@/config.js';
+import { consoleJobInfo } from '@/utils';
 
 function hasChat() {
   return selector().id('tv_content_text').exists();
@@ -7,9 +8,7 @@ function hasChat() {
 
 function consoleChatInfo(prefix, jobInfo) {
   console.info(`${prefix} ↓↓↓`);
-  console.log(jobInfo.company.name);
-  console.log(jobInfo.title);
-  console.log(`${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}`);
+  consoleJobInfo(jobInfo);
   console.info('------------');
 }
 
@@ -36,7 +35,7 @@ export function ChatAuto(jobInfo = {}) {
   selector().id('editText_with_scrollbar').waitFor();
 
   if (hasChat()) {
-    consoleChatInfo('chat', jobInfo);
+    consoleChatInfo('hasChat', jobInfo);
     back();
     waitForLeaveActivity(chatActivity);
     return false;

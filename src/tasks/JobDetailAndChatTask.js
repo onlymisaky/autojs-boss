@@ -34,8 +34,8 @@ export const JobDetailAndChatTask = {
           continue;
         }
       }
-      catch (error) {
-        console.error(error);
+      catch {
+        console.error('JobDetailAndChatTask');
         break;
       }
     }
