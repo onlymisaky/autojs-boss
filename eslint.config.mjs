@@ -30,6 +30,7 @@ export default antfu({
       setClip: 'readonly',
       exit: 'readonly',
       toast: 'readonly',
+      files: 'readonly',
     },
   },
   env: {

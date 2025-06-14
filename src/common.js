@@ -1,3 +1,5 @@
+import { timeNow } from '@/utils';
+
 /**
  * @param {number} size
  * @returns {[number, number]} 滑动区间
@@ -228,3 +230,12 @@ export function waitForLeaveActivity(activityName, period = 200) {
     return false;
   }
 }
+
+// const logPath = `${files.cwd()}boss-auto-logs/${timeNow('yyyy-MM-dd')}.txt`;
+
+export function writeLog(msg, tag) {
+  console.log(`[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\r\n`);
+  // files.append(logPath, `[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\n`);
+}
+
+export const logPlaceholder = Array.from({ length: '[yyyy-MM-dd HH:mm:ss] '.length }).fill(' ').join('');

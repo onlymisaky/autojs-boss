@@ -1,7 +1,5 @@
 export function isLogout() {
-  return (selector().id('cl_item').exists() && selector().id('checkbox').exists()) || (
-    selector().bounds(83, 941, 997, 1416).exists()
-  );
+  return (selector().id('cl_item').exists() && selector().id('checkbox').exists());
 }
 
 export function waitForLoginOut() {

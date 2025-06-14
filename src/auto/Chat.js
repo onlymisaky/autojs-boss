@@ -1,15 +1,9 @@
-import { waitForLeaveActivity } from '@/common.js';
-import { chatActivity, msg } from '@/config.js';
-import { consoleJobInfo, timeNow } from '@/utils';
+import { waitForLeaveActivity, writeLog } from '@/common.js';
+import { chatActivity, msg, sendBounds } from '@/config.js';
+import { genLogMsg } from '@/utils';
 
 function hasChat() {
   return selector().id('tv_content_text').exists();
-}
-
-function consoleChatInfo(prefix, jobInfo) {
-  console.info(`[${timeNow()}] `, `${prefix} ↓↓↓`);
-  consoleJobInfo(jobInfo);
-  console.info('------------');
 }
 
 /**
@@ -22,9 +16,9 @@ function sendMsg(jobInfo) {
 
   sleep(300);
 
-  selector().bounds(959, 2235, 1036, 2312).clickable().click();
+  selector().bounds(...sendBounds.map((v) => Number(v))).clickable().click();
 
-  consoleChatInfo('chat', jobInfo);
+  writeLog(genLogMsg('沟通', jobInfo), '😊');
 }
 
 /**
@@ -35,7 +29,7 @@ export function ChatAuto(jobInfo = {}) {
   selector().id('editText_with_scrollbar').waitFor();
 
   if (hasChat()) {
-    consoleChatInfo('hasChat', jobInfo);
+    writeLog(genLogMsg('聊过', jobInfo), '🙂');
     back();
     waitForLeaveActivity(chatActivity);
     return false;

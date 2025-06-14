@@ -10,6 +10,7 @@ app.launchApp('BOSS直聘');
 function main() {
   waitForPackage(pkg);
 
+  // eslint-disable-next-line no-new
   new TaskManager();
 }
 

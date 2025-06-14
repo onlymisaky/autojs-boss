@@ -5,9 +5,10 @@ import {
   swipeToTopWithStop,
   swipeUp,
   waitForLeaveActivity,
+  writeLog,
 } from '@/common.js';
 import { detailActivity, pkg } from '@/config';
-import { consoleJobInfo, isEligibleJob, logErrorWithTime, resolveSalary } from '@/utils.js';
+import { genLogMsg, isEligibleJob, resolveSalary } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
   sleep(beforSwipeWaitMs);
@@ -78,16 +79,6 @@ function getText(uicollection, selectorId) {
   const $uiobject = findOneInCollectionById(uicollection, selectorId);
   const text = getTextByUiObject($uiobject);
   return text;
-}
-
-/**
- * @param {string} reason
- * @param {JobIno} jobInfo
- */
-function consoleNotMatchReason(reason, jobInfo) {
-  logErrorWithTime(`PASS: ${reason} ↓↓↓`);
-  consoleJobInfo(jobInfo);
-  console.error('------------');
 }
 
 function getJobInfoInJobDetail() {
@@ -233,7 +224,8 @@ export function JobDetailAuto() {
   const { isEligible, reason } = isEligibleJob(jobInfo);
 
   if (!isEligible) {
-    consoleNotMatchReason(reason, jobInfo);
+    const msg = genLogMsg(reason, jobInfo);
+    writeLog(msg, '👎');
     nextJob();
     return { jobInfo, isEligible };
   }
