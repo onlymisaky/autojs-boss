@@ -12,11 +12,13 @@ function hasChat() {
 function sendMsg(jobInfo) {
   const $editText_with_scrollbar = selector().id('editText_with_scrollbar').findOne();
 
-  $editText_with_scrollbar.setText(config.msg);
+  for (const msg of config.msgs) {
+    $editText_with_scrollbar.setText(msg);
 
-  sleep(300);
+    sleep(300);
 
-  selector().bounds(...config.sendBounds.map((v) => Number(v))).clickable().click();
+    selector().bounds(...config.sendBounds.map((v) => Number(v))).clickable().click();
+  }
 
   writeLog(genLogMsg('沟通', jobInfo), '😊');
 }
