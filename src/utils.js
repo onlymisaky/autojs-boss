@@ -1,13 +1,5 @@
 import { logPlaceholder } from '@/common.js';
-import {
-  excludeCompanies,
-  excludeCompanyMsg,
-  jobTitleExcludeMsg,
-  jobTitleMatches,
-  jobTitleNotIncludeMsg,
-  salaryNotInRangeMsg,
-  salaryRange,
-} from './config.js';
+import config from './config.js';
 
 export function resolveSalary(salaryText) {
   const arr = salaryText.split('·');
@@ -36,27 +28,27 @@ export function resolveSalary(salaryText) {
 export function isEligibleJob(job) {
   const { title = '', salary = { min: 0, max: 0, count: '' }, company = {} } = job;
 
-  const includeKeywords = jobTitleMatches.include.filter((keyword) => keyword.trim());
-  const excludeKeywords = jobTitleMatches.exclude.filter((keyword) => keyword.trim());
-  const excludeCompany = excludeCompanies.filter((keyword) => keyword.trim());
+  const includeKeywords = config.jobTitleMatches.include.filter((keyword) => keyword.trim());
+  const excludeKeywords = config.jobTitleMatches.exclude.filter((keyword) => keyword.trim());
+  const excludeCompany = config.excludeCompanies.filter((keyword) => keyword.trim());
 
   if (includeKeywords.length) {
     if (!(includeKeywords.some((keyword) => title.includes(keyword)))) {
-      return { isEligible: false, reason: jobTitleNotIncludeMsg };
+      return { isEligible: false, reason: config.jobTitleNotIncludeMsg };
     }
   }
 
   if (excludeKeywords.some((keyword) => title.includes(keyword))) {
-    return { isEligible: false, reason: jobTitleExcludeMsg };
+    return { isEligible: false, reason: config.jobTitleExcludeMsg };
   }
 
-  const [min, max] = salaryRange;
+  const [min, max] = config.salaryRange;
   if (salary.min < min && salary.max < max) {
-    return { isEligible: false, reason: salaryNotInRangeMsg };
+    return { isEligible: false, reason: config.salaryNotInRangeMsg };
   }
 
   if (excludeCompany.some((keyword) => company.name.includes(keyword))) {
-    return { isEligible: false, reason: excludeCompanyMsg };
+    return { isEligible: false, reason: config.excludeCompanyMsg };
   }
 
   return { isEligible: true, reason: '' };
@@ -89,7 +81,7 @@ export function logErrorWithTime(...msgs) {
  * @param {JobIno} jobInfo
  */
 export function genLogMsg(title, jobInfo) {
-  let msg = `${title}\n`; ;
+  let msg = `${title}\n`;
   msg += `${logPlaceholder}公司：${jobInfo.company.name}\n`;
   msg += `${logPlaceholder}职位：${jobInfo.title}\n`;
   msg += `${logPlaceholder}薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}\n`;

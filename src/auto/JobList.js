@@ -1,5 +1,5 @@
 import { findClosestClickableParent, getTextByUiObject, swipeUp, waitForLeaveActivity } from '@/common.js';
-import { mainActivity } from '@/config';
+import config from '@/config';
 import { isEligibleJob, resolveSalary } from '@/utils.js';
 
 /**
@@ -97,7 +97,7 @@ export function JobListAuto() {
 
   $clickable_parent.click();
 
-  waitForLeaveActivity(mainActivity);
+  waitForLeaveActivity(config.mainActivity);
 
   return true;
 }

@@ -7,7 +7,7 @@ import {
   waitForLeaveActivity,
   writeLog,
 } from '@/common.js';
-import { detailActivity, pkg } from '@/config';
+import config from '@/config';
 import { genLogMsg, isEligibleJob, resolveSalary } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
@@ -153,11 +153,11 @@ function getJobInfoInJobDetail() {
   }
 
   while (!(selector().id('tv_job_competitive_title').exists())) {
-    if (currentPackage() !== pkg) {
+    if (currentPackage() !== config.pkg) {
       return data;
     }
 
-    if (currentActivity() !== detailActivity) {
+    if (currentActivity() !== config.detailActivity) {
       return data;
     }
 
@@ -234,7 +234,7 @@ export function JobDetailAuto() {
 
   $btn_chat.click();
 
-  waitForLeaveActivity(detailActivity);
+  waitForLeaveActivity(config.detailActivity);
 
   return { jobInfo, isEligible };
 }

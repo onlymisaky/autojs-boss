@@ -1,5 +1,5 @@
 import { isLogout, login } from '@/auto/Login';
-import { mainActivity, pkg } from '@/config';
+import config from '@/config';
 import { logErrorWithTime } from '@/utils';
 
 export const LoginTask = {
@@ -7,7 +7,7 @@ export const LoginTask = {
   run() {
     while (true) {
       try {
-        if (currentPackage() !== pkg) {
+        if (currentPackage() !== config.pkg) {
           sleep(3000);
           continue;
         }
@@ -19,7 +19,7 @@ export const LoginTask = {
 
         login();
 
-        waitForActivity(mainActivity);
+        waitForActivity(config.mainActivity);
 
         sleep(5000);
       }

@@ -1,5 +1,5 @@
 import { waitForLeaveActivity, writeLog } from '@/common.js';
-import { chatActivity, msg, sendBounds } from '@/config.js';
+import config from '@/config.js';
 import { genLogMsg } from '@/utils';
 
 function hasChat() {
@@ -12,11 +12,11 @@ function hasChat() {
 function sendMsg(jobInfo) {
   const $editText_with_scrollbar = selector().id('editText_with_scrollbar').findOne();
 
-  $editText_with_scrollbar.setText(msg);
+  $editText_with_scrollbar.setText(config.msg);
 
   sleep(300);
 
-  selector().bounds(...sendBounds.map((v) => Number(v))).clickable().click();
+  selector().bounds(...config.sendBounds.map((v) => Number(v))).clickable().click();
 
   writeLog(genLogMsg('沟通', jobInfo), '😊');
 }
@@ -31,12 +31,12 @@ export function ChatAuto(jobInfo = {}) {
   if (hasChat()) {
     writeLog(genLogMsg('聊过', jobInfo), '🙂');
     back();
-    waitForLeaveActivity(chatActivity);
+    waitForLeaveActivity(config.chatActivity);
     return false;
   }
 
   sendMsg(jobInfo);
   back();
-  waitForLeaveActivity(chatActivity);
+  waitForLeaveActivity(config.chatActivity);
   return true;
 }

@@ -1,17 +1,17 @@
 import { JobListAuto } from '@/auto/JobList.js';
-import { mainActivity, pkg } from '@/config';
+import config from '@/config';
 import { logErrorWithTime } from '@/utils';
 
 export const JobListTask = {
   run() {
     while (true) {
       try {
-        if (currentPackage() !== pkg) {
+        if (currentPackage() !== config.pkg) {
           sleep(3000);
           continue;
         }
 
-        if (currentActivity() !== mainActivity) {
+        if (currentActivity() !== config.mainActivity) {
           sleep(3000);
           continue;
         }
