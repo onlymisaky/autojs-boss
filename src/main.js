@@ -10,9 +10,7 @@ app.launchApp('BOSS直聘');
 function main() {
   waitForPackage(pkg);
 
-  const taskManager = new TaskManager();
-
-  taskManager.startJobListTask();
+  new TaskManager();
 }
 
 main();

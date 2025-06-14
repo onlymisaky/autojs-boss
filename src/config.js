@@ -27,6 +27,9 @@ export const jobTitleMatches = {
     'cocos',
     'webgl',
     'gis',
+    'ue4',
+    'ue5',
+    '3d',
 
     '微信',
     '小程序',
@@ -60,6 +63,7 @@ export const jobTitleMatches = {
     '兼职',
     '实习',
 
+    '数字前端',
     '设计师',
   ],
 };

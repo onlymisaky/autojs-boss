@@ -1,25 +1,30 @@
 import { JobListAuto } from '@/auto/JobList.js';
-import { bus, EVENT_LIST_TO_DETAIL } from '@/bus';
+import { mainActivity, pkg } from '@/config';
 import { logErrorWithTime } from '@/utils';
-
-/**
- * 发送事件可以放在 auto 函数中，也可以放在任务中
- * 为了解耦和统一管理，一律放在任务中
- */
 
 export const JobListTask = {
   run() {
     while (true) {
       try {
+        if (currentPackage() !== pkg) {
+          sleep(3000);
+          continue;
+        }
+
+        if (currentActivity() !== mainActivity) {
+          sleep(3000);
+          continue;
+        }
+
         const hasEligibleJob = JobListAuto();
         if (hasEligibleJob) {
-          bus.emit(EVENT_LIST_TO_DETAIL);
-          break;
+          sleep(5000);
         }
       }
       catch (e) {
         logErrorWithTime('JobListTask', e);
-        break;
+        sleep(3000);
+        continue;
       }
     }
   },

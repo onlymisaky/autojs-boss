@@ -90,10 +90,8 @@ export function timeNow(format = 'yyyy-MM-dd HH:mm:ss') {
 
 export function logWithTime(...msgs) {
   console.log(`[${timeNow()}]`, ...msgs);
-  console.log(...msgs);
 }
 
 export function logErrorWithTime(...msgs) {
   console.error(`[${timeNow()}]`, ...msgs);
-  console.error(...msgs);
 }

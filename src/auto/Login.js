@@ -11,7 +11,8 @@ export function waitForLoginOut() {
 
 export function login() {
   selector().id('cl_item').findOne().click();
-  const $$tv_positive = selector().id('tv_positive').text('同意');
-  $$tv_positive.waitFor();
-  $$tv_positive.findOne().click();
+  selector().id('tv_positive').text('同意').findOne().click();
+  // const $$tv_positive = selector().id('tv_positive').text('同意');
+  // $$tv_positive.waitFor();
+  // $$tv_positive.findOne().click();
 }

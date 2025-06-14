@@ -1,26 +1,32 @@
-import { login, waitForLoginOut } from '@/auto/Login';
-import { bus, EVENT_LOGIN, EVENT_LOGOUT } from '@/bus';
-import { waitForActivity2 } from '@/common';
-import { mainActivity } from '@/config';
+import { isLogout, login } from '@/auto/Login';
+import { mainActivity, pkg } from '@/config';
 import { logErrorWithTime } from '@/utils';
 
 export const LoginTask = {
   isLogin: true,
   run() {
-    while (this.isLogin) {
+    while (true) {
       try {
-        waitForLoginOut();
-        this.isLogin = false;
-        bus.emit(EVENT_LOGOUT);
-        sleep(3000);
+        if (currentPackage() !== pkg) {
+          sleep(3000);
+          continue;
+        }
+
+        if (!isLogout()) {
+          sleep(3000);
+          continue;
+        }
+
         login();
-        waitForActivity2(mainActivity);
-        bus.emit(EVENT_LOGIN);
-        this.isLogin = true;
+
+        waitForActivity(mainActivity);
+
+        sleep(5000);
       }
       catch (e) {
         logErrorWithTime('LoginTask', e);
-        break;
+        sleep(3000);
+        continue;
       }
     }
   },

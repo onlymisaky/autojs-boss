@@ -6,8 +6,8 @@ import {
   swipeUp,
   waitForLeaveActivity,
 } from '@/common.js';
-import { detailActivity } from '@/config';
-import { consoleJobInfo, isEligibleJob, logErrorWithTime, resolveSalary, timeNow } from '@/utils.js';
+import { detailActivity, pkg } from '@/config';
+import { consoleJobInfo, isEligibleJob, logErrorWithTime, resolveSalary } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
   sleep(beforSwipeWaitMs);
@@ -115,17 +115,6 @@ function getJobInfoInJobDetail() {
   const $boss_label_tv_collection = findInCollectionById(getCurrentPanel().children(), 'boss_label_tv');
   const boss_active = $boss_label_tv_collection.size() > 0 ? getTextByUiObject($boss_label_tv_collection.get(0)) : '';
 
-  // 提前校验，节省乡下滚动时间
-  const { isEligible } = isEligibleJob({
-    title,
-    salary,
-    company: { name: company_title.trim() },
-  });
-
-  if (!isEligible) {
-    return { title, salary, company: { name: company_title.trim() } };
-  }
-
   const $fl_content_above_collection = findInCollectionById(getCurrentPanel().children(), 'fl_content_above');
   const jd_keywords = $fl_content_above_collection.size() > 0
     ? $fl_content_above_collection
@@ -141,7 +130,46 @@ function getJobInfoInJobDetail() {
     jd_description = getTextByUiObject($tv_description);
   }
 
-  while (!(selector().id('home_tip_vf').exists())) {
+  /** @type {JobIno} */
+  const data = {
+    title,
+    salary,
+    jd: {
+      description: jd_description,
+      workExperience: jd_workExperience,
+      degree: jd_degree,
+      publicTime: jd_publicTime,
+      keywords: jd_keywords,
+    },
+    company: {
+      address: company_address,
+      name: company_title.trim(),
+    },
+    boss: {
+      name: boss_name,
+      title: boss_title.trim(),
+      online: boss_online,
+      active: boss_active,
+    },
+    distance: '',
+  };
+
+  // 提前校验，节省乡下滚动时间
+  const { isEligible } = isEligibleJob(data);
+
+  if (!isEligible) {
+    return data;
+  }
+
+  while (!(selector().id('tv_job_competitive_title').exists())) {
+    if (currentPackage() !== pkg) {
+      return data;
+    }
+
+    if (currentActivity() !== detailActivity) {
+      return data;
+    }
+
     swipeUp(0.2);
   }
 
@@ -165,34 +193,16 @@ function getJobInfoInJobDetail() {
 
   const distance = getText(getCurrentPanel().children(), 'home_tip_vf');
 
-  /** @type {JobIno} */
-  const data = {
-    title,
-    salary,
-    jd: {
-      description: jd_description,
-      workExperience: jd_workExperience,
-      degree: jd_degree,
-      publicTime: jd_publicTime,
-      keywords: jd_keywords,
-    },
-    company: {
-      name: company_name,
-      address: company_address,
-      benefits: company_benefits,
-      stage: company_stage,
-      size: company_size,
-      industry: company_industry,
-      map: company_map,
-    },
-    boss: {
-      name: boss_name,
-      title: boss_title.trim(),
-      online: boss_online,
-      active: boss_active,
-    },
-    distance,
+  data.company = {
+    ...data.company,
+    name: company_name,
+    stage: company_stage,
+    size: company_size,
+    industry: company_industry,
+    address: company_map,
+    benefits: company_benefits,
   };
+  data.distance = distance;
 
   swipeToTopWithStop();
 
@@ -225,7 +235,7 @@ export function JobDetailAuto() {
   if (!isEligible) {
     consoleNotMatchReason(reason, jobInfo);
     nextJob();
-    return { jobInfo, isEligible: false };
+    return { jobInfo, isEligible };
   }
 
   const $btn_chat = selector().id('btn_chat').findOne();
@@ -234,5 +244,5 @@ export function JobDetailAuto() {
 
   waitForLeaveActivity(detailActivity);
 
-  return { jobInfo, isEligible: true };
+  return { jobInfo, isEligible };
 }

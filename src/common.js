@@ -228,24 +228,3 @@ export function waitForLeaveActivity(activityName, period = 200) {
     return false;
   }
 }
-
-export function waitForActivity2(activityName, period = 200) {
-  const now = Date.now();
-
-  const maxWaitMs = Infinity;
-
-  try {
-    while (currentActivity() !== activityName) {
-      if (Date.now() - now > maxWaitMs) {
-        console.log(`等待出现 ${activityName} 超时`);
-        return false;
-      }
-      sleep(period);
-    }
-    return true;
-  }
-  catch (error) {
-    console.error(`等待出现 ${activityName} 时发生错误:`, error);
-    return false;
-  }
-}
