@@ -65,6 +65,8 @@ const config = {
       '兼职',
       '实习',
 
+      'soc',
+      '芯片',
       '数字前端',
       '设计师',
     ],
@@ -123,12 +125,12 @@ const config = {
  */
 function formatStringArr(stringArrConfig) {
   if (Array.isArray(stringArrConfig)) {
-    return stringArrConfig.reduce((item) => {
+    return stringArrConfig.reduce((prev, item,) => {
       const str = `${item}`.trim();
       if (!['undefined', 'null', ''].includes(str)) {
-        item.push(str);
+        prev.push(str);
       }
-      return item;
+      return prev;
     }, []);
   }
   return [];

@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import webpack from 'webpack';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,12 @@ const webpackConfig = {
       },
     ],
   },
+  plugins: [
+    new webpack.BannerPlugin({
+      banner: 'auto.waitFor();',
+      raw: true,
+    }),
+  ],
 };
 
 export default webpackConfig;

@@ -1,7 +1,6 @@
 import config from '@/config.js';
 import { TaskManager } from '@/tasks/TaskManager.js';
 
-auto.waitFor();
 console.show(true);
 home();
 sleep(1000);
