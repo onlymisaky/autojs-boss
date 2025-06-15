@@ -77,14 +77,17 @@ export function logErrorWithTime(...msgs) {
 }
 
 /**
- * @param {string} title
+ * @param {string} action
  * @param {JobIno} jobInfo
  */
-export function genLogMsg(title, jobInfo) {
-  let msg = `${title}\n`;
-  msg += `${logPlaceholder}公司：${jobInfo.company.name}\n`;
-  msg += `${logPlaceholder}职位：${jobInfo.title}\n`;
-  msg += `${logPlaceholder}薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}\n`;
-  msg += `${logPlaceholder}${JSON.stringify(jobInfo)}\n`;
+export function genViewJobLogMsg(action, jobInfo) {
+  let msg = `浏览一个岗位\n`;
+  msg += `${action}\n`;
+  msg += `公司：${jobInfo.company.name}\n`;
+  msg += `职位：${jobInfo.title}\n`;
+  msg += `薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}\n`;
+  msg += `位置：${jobInfo.company.address}\n`;
+  msg += `要求：${jobInfo.jd.degree} ${jobInfo.jd.workExperience}\n`;
+  msg += `${JSON.stringify(jobInfo)}\n`;
   return msg;
 }

@@ -1,6 +1,6 @@
 import { waitForLeaveActivity, writeLog } from '@/common.js';
 import config from '@/config.js';
-import { genLogMsg } from '@/utils';
+import { genViewJobLogMsg } from '@/utils';
 
 function hasChat() {
   return selector().id('tv_content_text').exists();
@@ -20,7 +20,7 @@ function sendMsg(jobInfo) {
     selector().bounds(...config.sendBounds.map((v) => Number(v))).clickable().click();
   }
 
-  writeLog(genLogMsg('沟通', jobInfo), '😊');
+  writeLog(genViewJobLogMsg('沟通', jobInfo), '😊');
 }
 
 /**
@@ -31,7 +31,7 @@ export function ChatAuto(jobInfo = {}) {
   selector().id('editText_with_scrollbar').waitFor();
 
   if (hasChat()) {
-    writeLog(genLogMsg('聊过', jobInfo), '🙂');
+    writeLog(genViewJobLogMsg('聊过', jobInfo), '🙂');
     back();
     waitForLeaveActivity(config.chatActivity);
     return false;

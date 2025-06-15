@@ -8,7 +8,7 @@ import {
   writeLog,
 } from '@/common.js';
 import config from '@/config';
-import { genLogMsg, isEligibleJob, resolveSalary } from '@/utils.js';
+import { genViewJobLogMsg, isEligibleJob, resolveSalary } from '@/utils.js';
 
 export function nextJob(beforSwipeWaitMs = 1) {
   sleep(beforSwipeWaitMs);
@@ -263,7 +263,7 @@ export function JobDetailAuto() {
   const { isEligible, reason } = isEligibleJob(jobInfo);
 
   if (!isEligible) {
-    const msg = genLogMsg(reason, jobInfo);
+    const msg = genViewJobLogMsg(reason, jobInfo);
     writeLog(msg, '👎');
     nextJob();
     return { jobInfo, isEligible };
