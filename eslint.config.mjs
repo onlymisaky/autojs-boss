@@ -31,6 +31,7 @@ export default antfu({
       exit: 'readonly',
       toast: 'readonly',
       files: 'readonly',
+      click: 'readonly',
     },
   },
   env: {

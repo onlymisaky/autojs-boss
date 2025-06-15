@@ -64,6 +64,7 @@ const config = {
       '校招',
       '兼职',
       '实习',
+      '管培',
 
       'soc',
       '芯片',
@@ -125,7 +126,7 @@ const config = {
  */
 function formatStringArr(stringArrConfig) {
   if (Array.isArray(stringArrConfig)) {
-    return stringArrConfig.reduce((prev, item,) => {
+    return stringArrConfig.reduce((prev, item) => {
       const str = `${item}`.trim();
       if (!['undefined', 'null', ''].includes(str)) {
         prev.push(str);

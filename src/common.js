@@ -231,11 +231,15 @@ export function waitForLeaveActivity(activityName, period = 200) {
   }
 }
 
-// const logPath = `${files.cwd()}boss-auto-logs/${timeNow('yyyy-MM-dd')}.txt`;
+const logPath = files.join(files.cwd(), `boss-auto-logs/${timeNow('yyyy-MM-dd')}.txt`);
+
+if (!files.exists(logPath)) {
+  files.createWithDirs(logPath);
+}
 
 export function writeLog(msg, tag) {
-  console.log(`[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\r\n`);
-  // files.append(logPath, `[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\n`);
+  // console.log(`\r\n[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\r\n`);
+  files.append(logPath, `[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\n`);
 }
 
 export const logPlaceholder = Array.from({ length: '[yyyy-MM-dd HH:mm:ss] '.length }).fill(' ').join('');

@@ -15,6 +15,47 @@ export function nextJob(beforSwipeWaitMs = 1) {
   swipeLeft(0.8);
 }
 
+/**
+ * 滑动过程中也要实时获取 uiobject
+ * @param {string} selectorId
+ */
+function clickMore(selectorId) {
+  let $uiobject = findOneInCollectionById(getCurrentPanel().children(), selectorId);
+  const bottom = $uiobject.bounds().bottom;
+  while ($uiobject.bounds().bottom >= bottom) {
+    if (currentPackage() !== config.pkg) {
+      return false;
+    }
+
+    if (currentActivity() !== config.detailActivity) {
+      return false;
+    }
+
+    swipeUp(0.1);
+
+    $uiobject = findOneInCollectionById(getCurrentPanel().children(), selectorId);
+  }
+
+  click($uiobject.bounds().right - 50, $uiobject.bounds().bottom - 50);
+
+  return true;
+}
+
+function swipeToLastInfoVisible() {
+  while (!(selector().id('tv_job_competitive_title').exists())) {
+    if (currentPackage() !== config.pkg) {
+      return false;
+    }
+
+    if (currentActivity() !== config.detailActivity) {
+      return false;
+    }
+
+    swipeUp(0.2);
+  }
+  return true;
+}
+
 // eslint-disable-next-line no-unused-vars, unused-imports/no-unused-vars
 function copyUrl() {
   const $$iv_share = selector().id('iv_share');
@@ -152,16 +193,14 @@ function getJobInfoInJobDetail() {
     return data;
   }
 
-  while (!(selector().id('tv_job_competitive_title').exists())) {
-    if (currentPackage() !== config.pkg) {
-      return data;
+  if (jd_description && jd_description.endsWith('查看更多')) {
+    if (clickMore('tv_description')) {
+      jd_description = getText(getCurrentPanel().children(), 'tv_description');
     }
+  }
 
-    if (currentActivity() !== config.detailActivity) {
-      return data;
-    }
-
-    swipeUp(0.2);
+  if (!swipeToLastInfoVisible()) {
+    return data;
   }
 
   const $fl_content_collection = findInCollectionById(getCurrentPanel().children(), 'fl_content');
@@ -182,7 +221,7 @@ function getJobInfoInJobDetail() {
 
   const company_map = getText(getCurrentPanel().children(), 'tv_location');
 
-  const distance = getText(getCurrentPanel().children(), 'home_tip_vf');
+  const distance = getText(getCurrentPanel().children(), 'tv_title');
 
   data.company = {
     ...data.company,
