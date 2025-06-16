@@ -47,12 +47,20 @@ function clickMore(selectorId) {
 }
 
 function swipeToLastInfoVisible() {
+  let count = 0;
   while (!(selector().id('tv_job_competitive_title').exists())) {
     if (currentPackage() !== config.pkg) {
       return false;
     }
 
     if (currentActivity() !== config.detailActivity) {
+      return false;
+    }
+
+    count++;
+
+    if (count > 15) {
+      console.log('swipeToLastInfoVisible count > 15');
       return false;
     }
 
