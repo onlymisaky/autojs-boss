@@ -252,7 +252,7 @@ function getJobInfoInJobDetail() {
     stage: company_stage,
     size: company_size,
     industry: company_industry,
-    address: company_map,
+    map: company_map,
     benefits: company_benefits,
   };
   data.distance = distance;
