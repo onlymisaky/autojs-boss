@@ -20,7 +20,12 @@ export function nextJob(beforSwipeWaitMs = 1) {
  * @param {string} selectorId
  */
 function clickMore(selectorId) {
-  let $uiobject = findOneInCollectionById(getCurrentPanel().children(), selectorId);
+  const getUiobject = () => {
+    const $uiobject = findOneInCollectionById(getCurrentPanel().children(), selectorId);
+    return $uiobject;
+  };
+
+  let $uiobject = getUiobject();
   const bottom = $uiobject.bounds().bottom;
   while ($uiobject.bounds().bottom >= bottom) {
     if (currentPackage() !== config.pkg) {
@@ -33,7 +38,7 @@ function clickMore(selectorId) {
 
     swipeUp(0.1);
 
-    $uiobject = findOneInCollectionById(getCurrentPanel().children(), selectorId);
+    $uiobject = getUiobject();
   }
 
   click($uiobject.bounds().right - 50, $uiobject.bounds().bottom - 50);
@@ -186,19 +191,30 @@ function getJobInfoInJobDetail() {
     distance: '',
   };
 
-  // 提前校验，节省乡下滚动时间
   const { isEligible } = isEligibleJob(data);
 
-  if (!isEligible) {
-    return data;
-  }
-
-  if (jd_description && jd_description.endsWith('查看更多')) {
-    if (clickMore('tv_description')) {
-      jd_description = getText(getCurrentPanel().children(), 'tv_description');
+  // 如果不符合要求，也没有配置 当不匹配也要加载完整职位描述 ，则直接退出，不继续向下滚动，节省更多时间
+  if (!isEligible && !config.whileNotMatchLoadFullJobDescription) {
+    if (!isEligible) {
+      return data;
     }
   }
 
+  // 职位描述太长，需要点击查看更多
+  if (jd_description && jd_description.endsWith('查看更多')) {
+    if (clickMore('tv_description')) {
+      jd_description = getText(getCurrentPanel().children(), 'tv_description');
+      data.jd.description = jd_description;
+    }
+  }
+
+  // 如果不符合要求，也没有配置 当不匹配也要加载完整职信息，则直接退出，不继续向下滚动，节省更多时间
+  if (!isEligible && !config.whileNotMatchLoadFullJobDetail) {
+    return data;
+  }
+
+  // 一直向上滑动，直到最后一条信息出现
+  // 退出 app 或退出 当前 activity 时，停止滑动
   if (!swipeToLastInfoVisible()) {
     return data;
   }
@@ -221,9 +237,14 @@ function getJobInfoInJobDetail() {
 
   const company_map = getText(getCurrentPanel().children(), 'tv_location');
 
-  const distance = getTextByUiObject(
-    findInCollectionById(getCurrentPanel().children(), 'home_tip_vf').get(0),
-  );
+  let distance = '';
+  const $home_tip_vf_collection = findInCollectionById(getCurrentPanel().children(), 'home_tip_vf');
+  if ($home_tip_vf_collection.size()) {
+    const $tv_distance = $home_tip_vf_collection.get(0).children().findOne(selector().id('tv_title'));
+    if ($tv_distance) {
+      distance = getTextByUiObject($tv_distance);
+    }
+  }
 
   data.company = {
     ...data.company,

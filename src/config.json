@@ -20,5 +20,7 @@
     2235,
     1036,
     2312
-  ]
+  ],
+  "whileNotMatchLoadFullJobDescription": false,
+  "whileNotMatchLoadFullJobDetail": false
 }

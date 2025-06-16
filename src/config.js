@@ -110,7 +110,7 @@ const config = {
     '新致软件',
   ],
   excludeCompanyMsg: '公司不适合',
-  salaryRange: [20, 30],
+  salaryRange: [25, 25],
   salaryNotInRangeMsg: '薪资不在范围内',
   msgs: [
     '您好，我对这份工作非常感兴趣，希望可以有机会与您进一步沟通。',
@@ -118,6 +118,8 @@ const config = {
     '期待能有机会与您一起工作。',
   ],
   sendBounds: [959, 2235, 1036, 2312],
+  whileNotMatchLoadFullJobDescription: false,
+  whileNotMatchLoadFullJobDetail: false,
 };
 
 /**
@@ -194,6 +196,15 @@ try {
   ) {
     config.sendBounds = sendBounds.map((item) => Number(item));
   }
+
+  if ('whileNotMatchLoadFullJobDescription' in userConfig) {
+    config.whileNotMatchLoadFullJobDescription = !!userConfig.whileNotMatchLoadFullJobDescription;
+  }
+
+  if ('whileNotMatchLoadFullJobDetail' in userConfig) {
+    config.whileNotMatchLoadFullJobDetail = !!userConfig.whileNotMatchLoadFullJobDetail;
+  }
+
   toast('读取配置成功');
 }
 catch {
