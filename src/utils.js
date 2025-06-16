@@ -91,7 +91,7 @@ export function genViewJobLogMsg(action, jobInfo, isEligible = false) {
     msg += `${jobInfo.jd.description}\n`;
     msg += `区域：${jobInfo.company.address}\n`;
     msg += `地址：${jobInfo.company.map} ${jobInfo.distance ? jobInfo.distance : ''}\n`;
-    msg += `HR：${jobInfo.boss.name}${jobInfo.boss.online ? '(在线)' : ''} ${jobInfo.boss.active || ''}`;
+    msg += `HR：${jobInfo.boss.name}${jobInfo.boss.online ? '(在线)' : ''} ${jobInfo.boss.active || ''}\n`;
   }
   msg += `${JSON.stringify(jobInfo)}\n`;
   return msg;
