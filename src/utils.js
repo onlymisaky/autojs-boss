@@ -1,4 +1,3 @@
-import { logPlaceholder } from '@/common.js';
 import config from './config.js';
 
 export function resolveSalary(salaryText) {
@@ -79,17 +78,20 @@ export function logErrorWithTime(...msgs) {
 /**
  * @param {string} action
  * @param {JobIno} jobInfo
+ * @param {boolean} isEligible
  */
-export function genViewJobLogMsg(action, jobInfo, showJobDescription = false) {
+export function genViewJobLogMsg(action, jobInfo, isEligible = false) {
   let msg = `浏览一个岗位\n`;
   msg += `${action}\n`;
-  msg += `公司：${jobInfo.company.name}\n`;
+  msg += `公司：${jobInfo.company.name} ${jobInfo.company.size ? jobInfo.company.size : ''}\n`;
   msg += `职位：${jobInfo.title}\n`;
   msg += `薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}\n`;
-  msg += `位置：${jobInfo.company.address}\n`;
-  msg += `要求：${jobInfo.jd.degree} ${jobInfo.jd.workExperience}\n`;
-  if (showJobDescription) {
-    msg += `${jobInfo.description}\n`;
+  if (isEligible) {
+    msg += `要求：${jobInfo.jd.degree} ${jobInfo.jd.workExperience}\n`;
+    msg += `${jobInfo.jd.description}\n`;
+    msg += `区域：${jobInfo.company.address}\n`;
+    msg += `地址：${jobInfo.company.map} ${jobInfo.distance ? jobInfo.distance : ''}\n`;
+    msg += `HR：${jobInfo.boss.name}${jobInfo.boss.online ? '(在线)' : ''} ${jobInfo.boss.active || ''}`;
   }
   msg += `${JSON.stringify(jobInfo)}\n`;
   return msg;
