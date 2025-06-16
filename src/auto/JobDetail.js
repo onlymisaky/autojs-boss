@@ -221,7 +221,9 @@ function getJobInfoInJobDetail() {
 
   const company_map = getText(getCurrentPanel().children(), 'tv_location');
 
-  const distance = getText(getCurrentPanel().children(), 'tv_title');
+  const distance = getTextByUiObject(
+    findInCollectionById(getCurrentPanel().children(), 'home_tip_vf').get(0),
+  );
 
   data.company = {
     ...data.company,
