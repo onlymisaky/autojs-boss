@@ -46,9 +46,24 @@ function clickMore(selectorId) {
   return true;
 }
 
+function isLastInfoVisible() {
+  return selector().id('home_tip_vf').exists()
+    || selector().id('tv_job_competitive_title').exists()
+    || selector().text('BOSS安全提示').exists()
+    || false;
+}
+
 function swipeToLastInfoVisible() {
   let count = 0;
-  while (!(selector().id('tv_job_competitive_title').exists())) {
+  let lastInfoUiobjectVisible = isLastInfoVisible();
+
+  while (!lastInfoUiobjectVisible) {
+    lastInfoUiobjectVisible = isLastInfoVisible();
+
+    if (lastInfoUiobjectVisible) {
+      return true;
+    }
+
     if (currentPackage() !== config.pkg) {
       return false;
     }
@@ -66,7 +81,8 @@ function swipeToLastInfoVisible() {
 
     swipeUp(0.2);
   }
-  return true;
+
+  return lastInfoUiobjectVisible;
 }
 
 // eslint-disable-next-line no-unused-vars, unused-imports/no-unused-vars
@@ -137,7 +153,7 @@ function getText(uicollection, selectorId) {
 
 function getJobInfoInJobDetail() {
   // 获取的集合不是实时的，所以每次重新调用
-  const title = getText(getCurrentPanel().children(), 'tv_job_name').trim().toLowerCase();
+  const title = getText(getCurrentPanel().children(), 'tv_job_name').trim();
   const salaryText = getText(getCurrentPanel().children(), 'tv_job_salary');
   const salary = resolveSalary(salaryText);
 
@@ -241,7 +257,7 @@ function getJobInfoInJobDetail() {
     company_stage = '',
     company_size = '',
     company_industry = '',
-  ] = companyInfo.split('·').map((item) => item.trim());
+  ] = companyInfo.split('•').map((item) => item.trim());
 
   const company_map = getText(getCurrentPanel().children(), 'tv_location');
 

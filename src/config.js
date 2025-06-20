@@ -87,8 +87,6 @@ const config = {
     '优酷',
     '美团',
     'pdd',
-    'Pdd',
-    'PDD',
     '百度',
     '得物',
     '华为',
@@ -106,10 +104,12 @@ const config = {
     '达达集团',
     '人瑞',
     '海南钦诚软件',
+    'clps',
     '自协软件',
     '新致软件',
   ],
   excludeCompanyMsg: '公司不适合',
+  excludeJobDescriptionKeywords: ['unity', '英语'],
   salaryRange: [25, 25],
   salaryNotInRangeMsg: '薪资不在范围内',
   msgs: [
@@ -165,6 +165,11 @@ try {
   const excludeCompanies = formatStringArr(userConfig?.excludeCompanies);
   if (excludeCompanies.length > 0) {
     config.excludeCompanies = excludeCompanies;
+  }
+
+  const excludeJobDescriptionKeywords = formatStringArr(userConfig?.excludeJobDescriptionKeywords);
+  if (excludeJobDescriptionKeywords.length > 0) {
+    config.excludeJobDescriptionKeywords = excludeJobDescriptionKeywords;
   }
 
   config.salaryNotInRangeMsg = typeof userConfig?.salaryNotInRangeMsg === 'string'
@@ -229,6 +234,11 @@ try {
   const excludeCompanies = formatStringArr(additionalConfig?.excludeCompanies);
   if (excludeCompanies.length > 0) {
     config.excludeCompanies.push(...excludeCompanies);
+  }
+
+  const excludeJobDescriptionKeywords = formatStringArr(additionalConfig?.excludeJobDescriptionKeywords);
+  if (excludeJobDescriptionKeywords.length > 0) {
+    config.excludeJobDescriptionKeywords.push(...excludeJobDescriptionKeywords);
   }
 
   const msgs = formatStringArr(additionalConfig?.msgs);

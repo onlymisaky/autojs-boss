@@ -35,7 +35,7 @@ function getJobInfoBy$boss_job_card_view($boss_job_card_view) {
 
   /** @type {JobIno} */
   const data = {
-    title: getTextByUiObject($tv_position_name).trim().toLowerCase(),
+    title: getTextByUiObject($tv_position_name).trim(),
     jd: {
       workExperience: workExperience.trim(),
       degree: degree.trim(),

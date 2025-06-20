@@ -25,19 +25,26 @@ export function resolveSalary(salaryText) {
  * @param {JobIno} job
  */
 export function isEligibleJob(job) {
-  const { title = '', salary = { min: 0, max: 0, count: '' }, company = {} } = job;
+  const { salary = { min: 0, max: 0, count: '' } } = job;
 
   const includeKeywords = config.jobTitleMatches.include.filter((keyword) => keyword.trim());
   const excludeKeywords = config.jobTitleMatches.exclude.filter((keyword) => keyword.trim());
   const excludeCompany = config.excludeCompanies.filter((keyword) => keyword.trim());
+  const excludeJobDescriptionKeywords = config.excludeJobDescriptionKeywords.filter((keyword) => keyword.trim());
+
+  const jobTitle = job.title;
+
+  if (!jobTitle || jobTitle.trim() === '') {
+    return { isEligible: false, reason: '职位名称为空' };
+  }
 
   if (includeKeywords.length) {
-    if (!(includeKeywords.some((keyword) => title.includes(keyword)))) {
+    if (!(includeKeywords.some((keyword) => jobTitle.trim().toLowerCase().includes(keyword)))) {
       return { isEligible: false, reason: config.jobTitleNotIncludeMsg };
     }
   }
 
-  if (excludeKeywords.some((keyword) => title.includes(keyword))) {
+  if (excludeKeywords.some((keyword) => jobTitle.trim().toLowerCase().includes(keyword))) {
     return { isEligible: false, reason: config.jobTitleExcludeMsg };
   }
 
@@ -46,8 +53,22 @@ export function isEligibleJob(job) {
     return { isEligible: false, reason: config.salaryNotInRangeMsg };
   }
 
-  if (excludeCompany.some((keyword) => company.name.includes(keyword))) {
+  const companyName = job.company?.name;
+
+  if (!companyName || companyName.trim() === '') {
+    return { isEligible: false, reason: '公司名称为空' };
+  }
+
+  if (excludeCompany.some((keyword) => companyName.trim().toLowerCase().includes(keyword))) {
     return { isEligible: false, reason: config.excludeCompanyMsg };
+  }
+
+  const jobDescription = job.jd?.description;
+
+  if (jobDescription && jobDescription.trim() !== '') {
+    if (excludeJobDescriptionKeywords.some((keyword) => jobDescription.trim().toLowerCase().includes(keyword))) {
+      return { isEligible: false, reason: '职位描述中包含不合适的关键词' };
+    }
   }
 
   return { isEligible: true, reason: '' };
