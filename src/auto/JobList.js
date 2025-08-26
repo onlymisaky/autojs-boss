@@ -62,9 +62,9 @@ function getJobInfoBy$boss_job_card_view($boss_job_card_view) {
 }
 
 /**
- * 查找当前列表中是否有符合要求的职位，如果没有，向上滑动
- * 返回 true 表示有符合要求的职位
- * 返回 false 表示没有
+ * 查找当前列表中是否有符合要求的职位，
+ * 如果有，自动点击符合要求的职位，进去职位详情页，返回 true
+ * 如果没有，向上滑动一次，返回 false
  */
 export function JobListAuto() {
   const $boss_job_card_view_list = selector().id('boss_job_card_view').untilFind();

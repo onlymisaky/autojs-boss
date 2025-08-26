@@ -310,8 +310,8 @@ export function JobDetailAuto() {
   const { isEligible, reason } = isEligibleJob(jobInfo);
 
   if (!isEligible) {
-    const msg = genViewJobLogMsg(reason, jobInfo);
-    writeLog(msg, '👎');
+    const msg = genViewJobLogMsg(`[👎] [${reason}]`, jobInfo);
+    writeLog(msg);
     nextJob();
     return { jobInfo, isEligible };
   }

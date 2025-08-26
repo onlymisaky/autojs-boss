@@ -3,10 +3,7 @@
     "include": [],
     "exclude": []
   },
-  "jobTitleNotIncludeMsg": "职位不适合",
-  "jobTitleExcludeMsg": "职位名称中包含不合适的关键词",
   "excludeCompanies": [],
-  "excludeCompanyMsg": "公司不适合",
   "excludeJobDescriptionKeywords": [],
   "salaryRange": [
     0,

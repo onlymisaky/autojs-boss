@@ -27,25 +27,33 @@ export function resolveSalary(salaryText) {
 export function isEligibleJob(job) {
   const { salary = { min: 0, max: 0, count: '' } } = job;
 
-  const includeKeywords = config.jobTitleMatches.include.filter((keyword) => keyword.trim());
-  const excludeKeywords = config.jobTitleMatches.exclude.filter((keyword) => keyword.trim());
-  const excludeCompany = config.excludeCompanies.filter((keyword) => keyword.trim());
-  const excludeJobDescriptionKeywords = config.excludeJobDescriptionKeywords.filter((keyword) => keyword.trim());
-
   const jobTitle = job.title;
 
   if (!jobTitle || jobTitle.trim() === '') {
     return { isEligible: false, reason: '职位名称为空' };
   }
 
+  const includeKeywords = config.jobTitleMatches.include.filter((keyword) => keyword.trim());
+  const excludeKeywords = config.jobTitleMatches.exclude.filter((keyword) => keyword.trim());
+  const excludeCompany = config.excludeCompanies.filter((keyword) => keyword.trim());
+  const excludeJobDescriptionKeywords = config.excludeJobDescriptionKeywords.filter((keyword) => keyword.trim());
+
   if (includeKeywords.length) {
     if (!(includeKeywords.some((keyword) => jobTitle.trim().toLowerCase().includes(keyword)))) {
-      return { isEligible: false, reason: config.jobTitleNotIncludeMsg };
+      return {
+        isEligible: false,
+        reason: `职位名称中不包含关键词：${includeKeywords.join('、')}`,
+      };
     }
   }
 
-  if (excludeKeywords.some((keyword) => jobTitle.trim().toLowerCase().includes(keyword))) {
-    return { isEligible: false, reason: config.jobTitleExcludeMsg };
+  let arr = excludeKeywords.filter((keyword) => jobTitle.trim().toLowerCase().includes(keyword));
+
+  if (arr.length) {
+    return {
+      isEligible: false,
+      reason: `职位名称中包含关键词：${arr.join('、')}`,
+    };
   }
 
   const [min, max] = config.salaryRange;
@@ -59,15 +67,24 @@ export function isEligibleJob(job) {
     return { isEligible: false, reason: '公司名称为空' };
   }
 
-  if (excludeCompany.some((keyword) => companyName.trim().toLowerCase().includes(keyword))) {
-    return { isEligible: false, reason: config.excludeCompanyMsg };
+  arr = excludeCompany.filter((keyword) => companyName.trim().toLowerCase().includes(keyword));
+
+  if (arr.length) {
+    return {
+      isEligible: false,
+      reason: `公司名称中包含关键词：${arr.join('、')}`,
+    };
   }
 
   const jobDescription = job.jd?.description;
 
   if (jobDescription && jobDescription.trim() !== '') {
-    if (excludeJobDescriptionKeywords.some((keyword) => jobDescription.trim().toLowerCase().includes(keyword))) {
-      return { isEligible: false, reason: '职位描述中包含不合适的关键词' };
+    arr = excludeJobDescriptionKeywords.filter((keyword) => jobDescription.trim().toLowerCase().includes(keyword));
+    if (arr.length) {
+      return {
+        isEligible: false,
+        reason: `职位描述中包含关键词：${arr.join('、')}`,
+      };
     }
   }
 
@@ -97,23 +114,22 @@ export function logErrorWithTime(...msgs) {
 }
 
 /**
- * @param {string} action
+ * @param {string} result
  * @param {JobIno} jobInfo
- * @param {boolean} isEligible
+ * @param {boolean} _isEligible
  */
-export function genViewJobLogMsg(action, jobInfo, isEligible = false) {
-  let msg = `浏览一个岗位\n`;
-  msg += `${action}\n`;
+export function genViewJobLogMsg(result, jobInfo, _isEligible = false) {
+  let msg = `${result}\n`;
   msg += `公司：${jobInfo.company.name} ${jobInfo.company.size ? jobInfo.company.size : ''}\n`;
   msg += `职位：${jobInfo.title}\n`;
   msg += `薪资：${jobInfo.salary.min}-${jobInfo.salary.max} ${jobInfo.salary.count}\n`;
-  if (isEligible) {
-    msg += `要求：${jobInfo.jd.degree} ${jobInfo.jd.workExperience}\n`;
-    msg += `${jobInfo.jd.description}\n`;
-    msg += `区域：${jobInfo.company.address}\n`;
-    msg += `地址：${jobInfo.company.map} ${jobInfo.distance ? jobInfo.distance : ''}\n`;
-    msg += `HR：${jobInfo.boss.name}${jobInfo.boss.online ? '(在线)' : ''} ${jobInfo.boss.active || ''}\n`;
-  }
+  // if (_isEligible) {
+  msg += `要求：${jobInfo.jd.degree} ${jobInfo.jd.workExperience}\n`;
+  msg += `${jobInfo.jd.description}\n`;
+  msg += `区域：${jobInfo.company.address}\n`;
+  msg += `地址：${jobInfo.company.map} ${jobInfo.distance ? jobInfo.distance : ''}\n`;
+  msg += `HR：${jobInfo.boss.name}${jobInfo.boss.online ? '(在线)' : ''} ${jobInfo.boss.active || ''}\n`;
+  // }
   msg += `${JSON.stringify(jobInfo)}\n`;
   return msg;
 }

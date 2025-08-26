@@ -20,7 +20,9 @@ function sendMsg(jobInfo) {
     selector().bounds(...config.sendBounds.map((v) => Number(v))).clickable().click();
   }
 
-  writeLog(genViewJobLogMsg('沟通', jobInfo, true), '😊');
+  if (jobInfo) {
+    writeLog(genViewJobLogMsg('[🙂] [沟通]', jobInfo, true));
+  }
 }
 
 /**
@@ -31,7 +33,9 @@ export function ChatAuto(jobInfo = {}) {
   selector().id('editText_with_scrollbar').waitFor();
 
   if (hasChat()) {
-    writeLog(genViewJobLogMsg('聊过', jobInfo, true), '🙂');
+    if (jobInfo) {
+      writeLog(genViewJobLogMsg('[🙂] [沟通]', jobInfo, true));
+    }
     back();
     waitForLeaveActivity(config.chatActivity);
     return false;

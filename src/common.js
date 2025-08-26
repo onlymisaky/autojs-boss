@@ -237,9 +237,9 @@ if (!files.exists(logPath)) {
   files.createWithDirs(logPath);
 }
 
-export function writeLog(msg, tag) {
+export function writeLog(msg) {
   // console.log(`\r\n[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\r\n`);
-  files.append(logPath, `[${timeNow('yyyy-MM-dd HH:mm:ss')}]${tag ? ` [${tag}] ` : ' '}${msg}\n`);
+  files.append(logPath, `[${timeNow('yyyy-MM-dd HH:mm:ss')}] ${msg}\n----------\n`);
 }
 
 export const logPlaceholder = Array.from({ length: '[yyyy-MM-dd HH:mm:ss] '.length }).fill(' ').join('');

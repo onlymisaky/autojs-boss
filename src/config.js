@@ -72,8 +72,6 @@ const config = {
       '设计师',
     ],
   },
-  jobTitleNotIncludeMsg: '不是前端岗位',
-  jobTitleExcludeMsg: '不是优质的纯前端岗位',
   excludeCompanies: [
     '阿里巴巴',
     '腾讯',
@@ -108,7 +106,6 @@ const config = {
     '自协软件',
     '新致软件',
   ],
-  excludeCompanyMsg: '公司不适合',
   excludeJobDescriptionKeywords: ['unity', '英语'],
   salaryRange: [25, 25],
   salaryNotInRangeMsg: '薪资不在范围内',
@@ -154,14 +151,6 @@ try {
     config.jobTitleMatches.exclude = jobTitleExcludes;
   }
 
-  config.jobTitleNotIncludeMsg = typeof userConfig?.jobTitleNotIncludeMsg === 'string'
-    ? userConfig?.jobTitleNotIncludeMsg.trim()
-    : config.jobTitleNotIncludeMsg;
-
-  config.jobTitleExcludeMsg = typeof userConfig?.jobTitleExcludeMsg === 'string'
-    ? userConfig?.jobTitleExcludeMsg.trim()
-    : config.jobTitleExcludeMsg;
-
   const excludeCompanies = formatStringArr(userConfig?.excludeCompanies);
   if (excludeCompanies.length > 0) {
     config.excludeCompanies = excludeCompanies;
@@ -175,10 +164,6 @@ try {
   config.salaryNotInRangeMsg = typeof userConfig?.salaryNotInRangeMsg === 'string'
     ? userConfig?.salaryNotInRangeMsg.trim()
     : config.salaryNotInRangeMsg;
-
-  config.excludeCompanyMsg = typeof userConfig?.excludeCompanyMsg === 'string'
-    ? userConfig?.excludeCompanyMsg.trim()
-    : config.excludeCompanyMsg;
 
   const salaryRange = userConfig?.salaryRange;
   if (Array.isArray(salaryRange)
