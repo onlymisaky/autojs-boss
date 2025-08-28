@@ -1,5 +1,5 @@
 import { ChatAuto } from '@/auto/Chat';
-import { JobDetailAuto } from '@/auto/JobDetail';
+import { JobDetailAuto, nextJob } from '@/auto/JobDetail';
 import { JobListAuto } from '@/auto/JobList';
 import { isLogout, login } from '@/auto/Login';
 import config from '@/config.js';
@@ -17,6 +17,7 @@ function run() {
       // 非BOSS直聘进程，不做任何操作
       if (currentPackage() !== config.pkg) {
         sleep(3000);
+        console.log('currentPackage', currentPackage());
         continue;
       }
 
@@ -45,6 +46,7 @@ function run() {
       else if (currentActivity() === config.chatActivity) {
         ChatAuto(jobInfo);
         waitForActivity(config.detailActivity);
+        nextJob(1000);
         continue;
       }
 
@@ -58,6 +60,7 @@ function run() {
       // 其他
       else {
         sleep(3000);
+        console.log('currentActivity', currentActivity());
         continue;
       }
     }
